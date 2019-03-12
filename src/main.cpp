@@ -1,28 +1,17 @@
 #include <iostream>
+#include "Core.hpp"
 
 #include <list>
 #include <string>
+#include <fstream>
+#include <unistd.h>
 
 
-int     main(int argc, char const *argv[])
+#define PRINT_GREEN(x) std::cout << "\033[0;32m" << x << "\033[0m" << std::endl;
+
+
+int	main(const int argc, char const *argv[])
 {
-    std::list<std::string > comands;
-
-
-
-
-    if (argc > 1)
-    {
-        for (int i = 1; i < argc; i++)
-            comands.push_back(argv[i]);
-    }
-
-    
-    for(auto i : comands)
-    {
-        std::cout << i << std::endl;
-    }
-    
-    std::cout << "HELLO MOTHERFUCKER" << std::endl;
-    return 0;
+	Core AbstractVM(argc, argv);
+	return 0;
 }

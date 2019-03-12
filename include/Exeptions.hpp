@@ -1,33 +1,29 @@
 #ifndef EXEPTIONS_HPP 
 # define EXEPTIONS_HPP
 
-#include <exeption>
+#include <exception>
 
 
 
 
 
-class   OverflowExeption: std::overflow_error 
+class	OverflowException: std::overflow_error 
 {
-
 public:
-    explicit ParseExeption(const std::string &message): msg(message),overflow_error(message){}
-    virtual const char *what() const throw() override
-    {
-        return (msg.c_str());
-    }
-    
-private:
-    std::string     msg;
+	explicit ParseException(const std::string &message): msg(message),overflow_error(message){}
+	virtual const char *what() const throw() override {
+		return (msg.c_str());
+	}
 
+private:
+	std::string		msg;
 };
 
-class   DivisionByZeroException : std::exception
+class	DivisionByZeroException : std::exception
 {
 
 public:
-	virtual const char *what() const throw() override
-    {
+	virtual const char *what() const throw() override {
 		return "Division by zero";
 	}
 

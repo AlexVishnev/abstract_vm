@@ -7,7 +7,7 @@ INC_PATH = ./include/
 
 INC =  
 
-SRC =	main.cpp
+SRC =	main.cpp core.cpp parser.cpp factory.cpp
 
 OBJ = $(SRC:.cpp=.o)
 OBJ_DIR = obj
@@ -16,7 +16,7 @@ OBJ_SRC = $(addprefix $(OBJ_DIR)/, $(SRC:.cpp=.o))
 all: $(NAME)
 
 $(NAME): $(OBJ_SRC)
-	$(CC) -std=c++11 -Wall -Werror -Wextra $(OBJ_SRC) -o $(NAME)
+	$(CC) -std=c++11 -Wall -Werror -Wextra -g $(OBJ_SRC) -o $(NAME)
 
 $(OBJ_DIR)/%.o : $(SRC_PATH)%.cpp
 	@/bin/mkdir -p $(OBJ_DIR)
