@@ -14,7 +14,7 @@
 class Core
 {
 public:
-	explicit Core (const int argc, const char **argv);
+	Core ();
 	Core &operator=(const Core &ref);
 	Core(Core const &ref);
 	~Core();
@@ -29,16 +29,16 @@ public:
 	void	_mult();
 	void	_mod();
 	void	_dump();
+	void	__initd(const int mode, const char **cmd);
 
 
 private:
-	Core();
 	Factory			factory;
 	Parser			parser;
 
-	std::list <std::string> __cmd; //container with what?
+	std::list <std::string> 	 __cmd; //container with what?
+	std::list <IOperand const *> __stack;
 
-	void	__initd();
 	void	draw_logo();
 };
 

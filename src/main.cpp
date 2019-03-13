@@ -12,6 +12,7 @@
 
 int	main(const int argc, char const *argv[])
 {
-	Core AbstractVM(argc, argv);
+	//Core AbstractVM;
+	Core().__initd(argc, argv);
 	return 0;
 }

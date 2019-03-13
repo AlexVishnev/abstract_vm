@@ -1,10 +1,11 @@
 #include "Core.hpp"
 
 
-void	Core::__initd()
+void	Core::__initd(const int mode, const char **cmd)
 {
 	std::cout << "Daemon started" << std::endl;
 
+	parser._read(mode, cmd );
 	//Parse file
 	//Lexer analys
 	//start exec Core
@@ -25,19 +26,17 @@ Core::Core(Core const &ref)
 Core &Core::operator=(Core const &ref)
 {
 	if (this != &ref) {
-		// factory = ref.factory;
-		// parser = ref.parser;
+		factory = ref.factory;
+		parser = ref.parser;
 		std::cout << "DONE YOU WORK PIDOR" << std::endl;
 	}
 	return (*this);
 }
 
 
-Core::Core (const int argc, const char **argv)
+Core::Core ()
 {
 	draw_logo();
-	parser._read(argc, argv);
-	std::cout << argv[0] << " " << argc << std::endl;
 }
 
 void Core::draw_logo()
