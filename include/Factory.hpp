@@ -1,6 +1,8 @@
 #ifndef FACTORY_HPP
 #define FACTORY_HPP
-#include <list>
+
+#include "Operand.hpp"
+#include <vector>
 #include "IOperand.hpp"
 
 class Factory
@@ -20,7 +22,7 @@ private:
 	IOperand const *createDouble(std::string const & value ) const;
 
 
-	std::list <IOperand const *(Factory::*)(std::string const &value) const > core_quene;
+	std::vector <IOperand const *(Factory::*)(std::string const &value) const > core_quene;
 
 };
 

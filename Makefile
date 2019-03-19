@@ -7,7 +7,7 @@ INC_PATH = ./include/
 
 INC =  
 
-SRC =	main.cpp core.cpp parser.cpp factory.cpp
+SRC =	main.cpp core.cpp parser.cpp factory.cpp operand.cpp
 
 OBJ = $(SRC:.cpp=.o)
 OBJ_DIR = obj

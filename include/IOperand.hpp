@@ -9,7 +9,8 @@ enum eOperandType
 	Int16,
 	Int32,
 	Float,
-	Double
+	Double,
+	end = 20
 };
 
 
@@ -25,12 +26,12 @@ public:
 	virtual IOperand const		*operator % (IOperand const &rhs) const = 0;
 	virtual IOperand const		*operator ^ (IOperand const &rhs) const = 0;
 
-	virtual bool				operator == (IOperand const &rhs) const = 0;
-	virtual bool				operator >  (IOperand const &rhs) const = 0;
-	virtual bool				operator <  (IOperand const &rhs) const = 0;
-	virtual bool				operator >= (IOperand const &rhs) const = 0;
-	virtual bool				operator <= (IOperand const &rhs) const = 0;
-	virtual bool				operator != (IOperand const &rhs) const = 0;
+	// virtual bool				operator == (IOperand const &rhs) const = 0;
+	// virtual bool				operator >  (IOperand const &rhs) const = 0;
+	// virtual bool				operator <  (IOperand const &rhs) const = 0;
+	// virtual bool				operator >= (IOperand const &rhs) const = 0;
+	// virtual bool				operator <= (IOperand const &rhs) const = 0;
+	// virtual bool				operator != (IOperand const &rhs) const = 0;
 	virtual std::string const	&toString() const = 0;
 	virtual ~IOperand() {}
 };
