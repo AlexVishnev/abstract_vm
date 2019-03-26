@@ -17,7 +17,6 @@ class Operand: public IOperand
 private:
 	T				_value;
 	std::string		_buffer;
-	eOperandType	_type;
 public:
 	Operand(T value);
 	~Operand();

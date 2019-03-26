@@ -22,8 +22,8 @@ public:
 	bool	is_filestream(const int mode);
 
 private:
-	std::string file_path;
-	std::list <std::string > comands;
+	std::string					file_path;
+	std::list <std::string >	comands;
 };
 
 #endif // !PARSER_HPP 
