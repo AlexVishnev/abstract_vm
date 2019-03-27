@@ -1,5 +1,5 @@
 #include "Core.hpp"
-#include "Exeptions.hpp"
+#include "Exceptions.hpp"
 
 void	Core::_exec()
 {
@@ -20,56 +20,126 @@ void	Core::_exec()
 }
 void	Core::_pow()
 {
-	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
-	if (_stack.size() < 2)
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
+	_get_elements_from_stack();
+	if (first != nullptr && second != nullptr) {
 
+		rezult = *first ^ *second;
+
+		_stack.push_back(rezult);
+		delete first;
+		delete second;
+	}
 }
 
 void	Core::_mod()
 {
+	_get_elements_from_stack();
+	
+	if (first != nullptr && second != nullptr) {
 
-	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
-	if (_stack.size() < 2)
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
+		// 	throw OverflowException("\033[0;31mError: Overflow rezult after operation ->ADD\033[0m");
+		if (second->toString() == "0" || second->toString() == "0.0")
+			throw DivByZeroException("\033[0;31mError: Trying to Modulo by zero\033[0m");
+		rezult = *first % *second;
+
+		_stack.push_back(rezult);
+		delete first;
+		delete second;
+	}
 }
 
 void	Core::_add()
 {
+	_get_elements_from_stack();
+	
+	if (first != nullptr && second != nullptr) {
+		// if (overflow_check(first, second, '+'))
+		// 	throw OverflowException("\033[0;31mError: Overflow rezult after operation ->ADD\033[0m");
+		try {
+			rezult = *first + *second;
+		}
+		catch (std::exception &e){
+			PRINT_RED(e.what())
+		}
 
-	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
-	if (_stack.size() < 2)
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
+		_stack.push_back(rezult);
+		delete first;
+		delete second;
+	}
+}
+
+bool	Core::overflow_check(IOperand const *first, IOperand const *second, int8_t _operator)
+{
+	eOperandType otype[2];
+
+	if (_operator == '+') {
+		otype[0] = first->getType();
+		otype[1] = second->getType();
+		if (otype[0] == Int32){
+
+		}
+	
+	}
+	else if (_operator == '-') {
+		
+	}
+	else if (_operator == '*') {
+		
+	}
+	else if (_operator == '/') {
+		
+	}
+	else if (_operator == '^') {
+		
+	}	
+	return false;
 }
 
 
 void	Core::_mult()
 {
+	_get_elements_from_stack();
 
-	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
-	if (_stack.size() < 2)
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
+	if (first != nullptr && second != nullptr) {
+
+		rezult = *first * *second;
+		_stack.push_back(rezult);
+
+		delete first;
+		delete second;
+	}
 }
 
 void	Core::_div()
 {
+	_get_elements_from_stack();
 
-	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
-	if (_stack.size() < 2)
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
+	if (first != nullptr && second != nullptr) {
+
+		if (second->toString() == "0" || second->toString() == "0.0")
+			throw DivByZeroException("\033[0;31mError: Trying to Divide by zero\033[0m");
+		rezult = *first / *second;
+		_stack.push_back(rezult);
+
+		delete first;
+		delete second;
+	}
 }
+
+
 
 void	Core::_sub()
 {
-	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
-	if (_stack.size() < 2)
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
+	_get_elements_from_stack();
+	
+	if (first != nullptr && second != nullptr) {
+
+		rezult = *first - *second;
+		_stack.push_back(rezult);
+
+		delete first;
+		delete second;
+	}
 }
 void	Core::_pop()
 {
@@ -143,6 +213,18 @@ Core &Core::operator=(Core const &ref)
 	return (*this);
 }
 
+void Core::_get_elements_from_stack()
+{
+	if (_stack.empty())
+		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
+	if (_stack.size() < 2)
+		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
+
+	first =_stack.back();
+	_stack.pop_back();
+	second = _stack.back();;
+	_stack.pop_back();
+}
 
 Core::Core ()
 {

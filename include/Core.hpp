@@ -15,9 +15,9 @@ class Core
 {
 public:
 	Core ();
+	~Core();
 	Core &operator=(const Core &ref);
 	Core(Core const &ref);
-	~Core();
 
 	void	_push(std::string const &type, std::string const &value);
 	void	_assert(std::string const &type, std::string const &value);
@@ -32,17 +32,22 @@ public:
 	void	_pow();
 	void	__initd(const int mode, const char **cmd);
 
-
-private:
+protected:
 	Factory			factory;
 	Parser			parser;
-	void			_exec();
 
+	bool	overflow_check(IOperand const *first, IOperand const *second, int8_t _operator);
 	std::list <std::string> 		_cmd_default;
 	std::list <IOperand const *>	_stack;
+private:
+	IOperand const	*first;
+	IOperand const	*second;
+	IOperand const	*rezult;
+	void			_exec();
+	void			draw_logo();
+	void			fill_default_commands();
 
-	void	draw_logo();
-	void	fill_default_commands();
+
 };
 
 

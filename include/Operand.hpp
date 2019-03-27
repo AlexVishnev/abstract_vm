@@ -3,6 +3,7 @@
 
 #include "IOperand.hpp"
 #include "Factory.hpp"
+#include "Exceptions.hpp"
 #include <iomanip>
 #include <iostream>
 #include <sstream>
@@ -40,6 +41,8 @@ public:
 	// bool				operator >= (IOperand const &rhs) const;
 	// bool				operator <= (IOperand const &rhs) const;
 	// bool				operator != (IOperand const &rhs) const;
+
+	void				operations_check(T first, T second, char _operator) const;
 	std::string const	&toString() const;
 
 };

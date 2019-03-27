@@ -3,6 +3,7 @@
 
 #include <exception>
 #include <string>
+#include <limits>
 
 class EmptyStackException: std::exception
 {
@@ -28,13 +29,25 @@ private:
 	std::string		msg;
 };
 
-class	DivisionByZeroException : std::exception
+class	UnderFlowExceprtion: std::underflow_error 
+{
+public:
+	explicit UnderFlowExceprtion(const std::string &message): underflow_error(message), msg(message) {}
+	virtual const char *what() const throw() override {
+		return (msg.c_str());
+	}
+
+private:
+	std::string		msg;
+};
+
+class	DivByZeroException : std::exception
 {
 
 public:
-	explicit DivisionByZeroException(const std::string &message): msg(message){}
+	explicit DivByZeroException(const std::string &message): msg(message){}
 	virtual const char *what() const throw() override {
-		return "Division by zero";
+		return msg.c_str();
 	}
 private:
 	std::string	msg;
