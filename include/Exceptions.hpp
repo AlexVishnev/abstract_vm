@@ -29,10 +29,10 @@ private:
 	std::string		msg;
 };
 
-class	UnderFlowExceprtion: std::underflow_error 
+class	UnderflowException: std::underflow_error 
 {
 public:
-	explicit UnderFlowExceprtion(const std::string &message): underflow_error(message), msg(message) {}
+	explicit UnderflowException(const std::string &message): underflow_error(message), msg(message) {}
 	virtual const char *what() const throw() override {
 		return (msg.c_str());
 	}

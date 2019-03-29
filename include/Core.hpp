@@ -1,9 +1,9 @@
 #ifndef CORE_HPP
 # define CORE_HPP
 
-#include "Enums.hpp"
 #include "Parser.hpp"
 #include "Factory.hpp"
+#include "Cmds.hpp"
 #include <string>
 #include <iostream>
 #include <list>
@@ -19,30 +19,37 @@ public:
 	Core &operator=(const Core &ref);
 	Core(Core const &ref);
 
-	void	_push(std::string const &type, std::string const &value);
-	void	_assert(std::string const &type, std::string const &value);
+	void	_push(t_cmds comadnds);
+	void	_assert(t_cmds comadnds);
 	void	_get_elements_from_stack();
 	void	_pop();
 	void	_add();
 	void	_sub();
 	void	_div();
-	void	_mult();
+	void	_mul();
 	void	_mod();
 	void	_dump();
 	void	_pow();
+	void	_print();
+	void	_clear();
 	void	__initd(const int mode, const char **cmd);
 
 protected:
 	Factory			factory;
 	Parser			parser;
+	
+	std::list <t_cmds> command_quene;
+	bool			overflow_check(IOperand const *, IOperand const *, int8_t );
 
-	bool	overflow_check(IOperand const *first, IOperand const *second, int8_t _operator);
 	std::list <std::string> 		_cmd_default;
 	std::list <IOperand const *>	_stack;
 private:
+	
+	
 	IOperand const	*first;
 	IOperand const	*second;
 	IOperand const	*rezult;
+	
 	void			_exec();
 	void			draw_logo();
 	void			fill_default_commands();

@@ -1,18 +1,65 @@
 #include "Core.hpp"
 #include "Exceptions.hpp"
 
+void	Core::__initd(const int mode, const char **cmd)
+{
+	std::cout << "Daemon started" << std::endl;
+
+	parser._read(mode, cmd );
+	//Parse file
+	//Lexer analys
+	//start exec Core
+	_exec();
+
+}
 void	Core::_exec()
 {
-	try
+	try 
 	{
-		_add();
-		_pop();
-		_sub();
-		_mult();
-		_div();
-		_pow();
-		_mod();
-		_dump();
+		for (auto cmd : command_quene)
+		{
+			switch (cmd.type)
+			{
+				case Push:
+						_push(cmd);
+						break;
+				case Pop:
+						_pop();
+						break;
+				case Dump:
+						_dump();
+						break;
+				case Print:
+						_print();
+						break;
+				case Assert:
+						_assert(cmd);
+						break;
+				case Add:
+						_add();
+						break;
+				case Sub:
+						_sub();
+						break;
+				case Mul:
+						_mul();
+						break;
+				case Div:
+						_div();
+						break;
+				case Mod:
+						_mod();
+						break;
+				case Pow:
+						_pow();
+						break;
+				case Clear:
+						_clear();
+						break;
+				case Exit:
+						return ;
+			}
+		}
 	}
 	catch (EmptyStackException &e) {
 		std::cerr << e.what() << std::endl;
@@ -37,12 +84,9 @@ void	Core::_mod()
 	
 	if (first != nullptr && second != nullptr) {
 
-		// 	throw OverflowException("\033[0;31mError: Overflow rezult after operation ->ADD\033[0m");
-		if (second->toString() == "0" || second->toString() == "0.0")
-			throw DivByZeroException("\033[0;31mError: Trying to Modulo by zero\033[0m");
 		rezult = *first % *second;
-
 		_stack.push_back(rezult);
+
 		delete first;
 		delete second;
 	}
@@ -53,50 +97,18 @@ void	Core::_add()
 	_get_elements_from_stack();
 	
 	if (first != nullptr && second != nullptr) {
-		// if (overflow_check(first, second, '+'))
-		// 	throw OverflowException("\033[0;31mError: Overflow rezult after operation ->ADD\033[0m");
-		try {
-			rezult = *first + *second;
-		}
-		catch (std::exception &e){
-			PRINT_RED(e.what())
-		}
 
+		rezult = *first + *second;
 		_stack.push_back(rezult);
+
 		delete first;
 		delete second;
 	}
 }
 
-bool	Core::overflow_check(IOperand const *first, IOperand const *second, int8_t _operator)
-{
-	eOperandType otype[2];
-
-	if (_operator == '+') {
-		otype[0] = first->getType();
-		otype[1] = second->getType();
-		if (otype[0] == Int32){
-
-		}
-	
-	}
-	else if (_operator == '-') {
-		
-	}
-	else if (_operator == '*') {
-		
-	}
-	else if (_operator == '/') {
-		
-	}
-	else if (_operator == '^') {
-		
-	}	
-	return false;
-}
 
 
-void	Core::_mult()
+void	Core::_mul()
 {
 	_get_elements_from_stack();
 
@@ -110,14 +122,36 @@ void	Core::_mult()
 	}
 }
 
+void	Core::_assert(t_cmds cmd)
+{
+	if (_stack.empty())
+		throw EmptyStackException("\033[0;31mError: Trying to ASSERT with empty stack\033[0m");
+
+	const IOperand *v1 = _stack.back();
+	_stack.pop_back();
+
+	const IOperand *v2 = Factory().createOperand(cmd.oper_type, cmd.strValue);
+
+	if (v1->getType() != v2->getType()) {
+		delete v1;
+		delete v2;
+		throw EmptyStackException("daun");
+	}
+	if (std::stod(v1->toString()) != std::stod(v2->toString())) {
+		delete v1;
+		delete v2;
+		throw EmptyStackException("lol");
+	}
+	delete v1;
+	delete v2;
+
+}
 void	Core::_div()
 {
 	_get_elements_from_stack();
 
 	if (first != nullptr && second != nullptr) {
 
-		if (second->toString() == "0" || second->toString() == "0.0")
-			throw DivByZeroException("\033[0;31mError: Trying to Divide by zero\033[0m");
 		rezult = *first / *second;
 		_stack.push_back(rezult);
 
@@ -126,7 +160,20 @@ void	Core::_div()
 	}
 }
 
+void	Core::_print()
+{
+	if (_stack.empty())
+		throw EmptyStackException("Emty _print");
+	const IOperand *v1 = _stack.back();
 
+	if (v1->getType() != Int8) {
+		throw EmptyStackException("int8");
+	}
+
+	//* continue from here
+	
+
+}
 
 void	Core::_sub()
 {
@@ -151,38 +198,11 @@ void	Core::_pop()
 
 }
 
-void	Core::_push(std::string	const &type, std::string const &value)
+void	Core::_push(t_cmds	cmd)
 {
-	eOperandType	op_type = end;
-
-	if (type == "int8")
-		op_type = Int8;
-	else if (type == "int16")
-		op_type = Int16;
-	else if (type == "int32")
-		op_type = Int32;
-	else if (type == "float")
-		op_type = Float;
-	else if (type == "double")
-		op_type = Double;
-	else
-		std::cerr << "wrong type" << std::endl;
-	
-	if (op_type != end)
-		_stack.push_back(Factory().createOperand(op_type, value));
+	_stack.push_back(Factory().createOperand(cmd.oper_type, cmd.strValue));
 }
 
-void	Core::__initd(const int mode, const char **cmd)
-{
-	std::cout << "Daemon started" << std::endl;
-
-	parser._read(mode, cmd );
-	//Parse file
-	//Lexer analys
-	//start exec Core
-	_exec();
-
-}
 
 void Core::_dump()
 {
