@@ -6,6 +6,7 @@ void	Core::__initd(const int mode, const char **cmd)
 	std::cout << "Daemon started" << std::endl;
 
 	parser._read(mode, cmd );
+	lexer.run_lexer(parser.get_list_commands());
 	//Parse file
 	//Lexer analys
 	//start exec Core
@@ -64,6 +65,12 @@ void	Core::_exec()
 	catch (EmptyStackException &e) {
 		std::cerr << e.what() << std::endl;
 	}
+}
+
+
+void	Core::_clear()
+{
+
 }
 void	Core::_pow()
 {
@@ -166,13 +173,10 @@ void	Core::_print()
 		throw EmptyStackException("Emty _print");
 	const IOperand *v1 = _stack.back();
 
-	if (v1->getType() != Int8) {
+	if (v1->getType() != Int8)
 		throw EmptyStackException("int8");
-	}
 
-	//* continue from here
-	
-
+	std::cout << static_cast<char>(std::stoi(v1->toString())) << std::endl;
 }
 
 void	Core::_sub()
@@ -229,6 +233,7 @@ Core &Core::operator=(Core const &ref)
 	if (this != &ref) {
 		factory = ref.factory;
 		parser = ref.parser;
+		lexer = ref.lexer;
 	}
 	return (*this);
 }

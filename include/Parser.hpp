@@ -20,6 +20,7 @@ public:
 	
 	void	_read(const int mode, const char **cfg_file);
 	bool	is_filestream(const int mode);
+	std::list <std::string> *get_list_commands();
 
 private:
 	std::string					file_path;

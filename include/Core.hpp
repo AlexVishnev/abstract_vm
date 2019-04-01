@@ -4,10 +4,8 @@
 #include "Parser.hpp"
 #include "Factory.hpp"
 #include "Cmds.hpp"
-#include <string>
-#include <iostream>
-#include <list>
-#include <unistd.h>
+#include "Lexer.hpp"
+
 
 
 
@@ -37,6 +35,7 @@ public:
 protected:
 	Factory			factory;
 	Parser			parser;
+	Lexer			lexer;
 	
 	std::list <t_cmds> command_quene;
 	bool			overflow_check(IOperand const *, IOperand const *, int8_t );

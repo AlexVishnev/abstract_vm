@@ -1,12 +1,16 @@
 #include "Parser.hpp"
 
-bool Parser::is_filestream(const int mode){
+bool Parser::is_filestream(const int mode)
+{
 	if (mode != 2)
 		PRINT_RED("\nInfo: no file detect using stdin");
 	return (mode == 2);
 }
 
-
+std::list <std::string> *Parser::get_list_commands()
+{
+	return (&this->comands);
+}
 void Parser::_read(const int mode, const char **cfg_file)
 {
 	if (is_filestream(mode))
@@ -27,16 +31,17 @@ void Parser::_read(const int mode, const char **cfg_file)
 		file.close();
 	}
 	else {
-		while (std::getline(std::cin, buffer)){
+		while (std::getline(std::cin, buffer))
+		{
 			comands.push_back(buffer);
 			if (buffer == ";;" || buffer == "exit")
 				break ;
 		}
 	}
 
-	PRINT_GREEN("TEST WHAT WRITED INTO LIST\n");
-	for (std::string i : comands)
-		std::cout << i << std::endl;
+	// PRINT_GREEN("TEST WHAT WRITED INTO LIST\n");
+	// for (std::string i : comands)
+	// 	std::cout << i << std::endl;
 }
 
 Parser &Parser::operator=(Parser const &ref)
@@ -47,9 +52,7 @@ Parser &Parser::operator=(Parser const &ref)
 	}
 	return *this;
 }
-Parser::Parser(){
-
-}
+Parser::Parser(){}
 
 Parser::~Parser()
 {
