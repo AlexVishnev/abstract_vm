@@ -3,10 +3,8 @@
 
 void	Core::__initd(const int mode, const char **cmd)
 {
-	std::cout << "Daemon started" << std::endl;
-
 	parser._read(mode, cmd );
-	lexer.run_lexer(parser.get_list_commands());
+	lexer.run_lexer(parser, parser.get_list_commands(), &command_quene);
 	//Parse file
 	//Lexer analys
 	//start exec Core
@@ -70,7 +68,7 @@ void	Core::_exec()
 
 void	Core::_clear()
 {
-
+	_stack.clear();
 }
 void	Core::_pow()
 {
@@ -170,7 +168,7 @@ void	Core::_div()
 void	Core::_print()
 {
 	if (_stack.empty())
-		throw EmptyStackException("Emty _print");
+		throw EmptyStackException("There is nothing ot print");
 	const IOperand *v1 = _stack.back();
 
 	if (v1->getType() != Int8)

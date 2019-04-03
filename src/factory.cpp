@@ -57,7 +57,6 @@ IOperand const *Factory::createFloat(std::string const &value ) const
 		std::cerr << e.what() << std::endl;
 		return (0);
 	}
-	
 
 }
 
@@ -82,11 +81,12 @@ Factory &Factory::operator = (Factory const &ref)
 	return *this;
 }
 
-Factory::Factory(){
+Factory::Factory()
+{
 	core_quene.push_back(&Factory::createInt8);
 	core_quene.push_back(&Factory::createInt16);
 	core_quene.push_back(&Factory::createInt32);
 	core_quene.push_back(&Factory::createFloat);
 	core_quene.push_back(&Factory::createDouble);
 }
-Factory::~Factory(){}
+Factory::~Factory(){	std::cout << "BY BY FROM " << __func__ << std::endl;}

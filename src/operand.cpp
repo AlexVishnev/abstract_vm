@@ -220,7 +220,7 @@ template <class T> Operand<T>::Operand(Operand const &ref)
 }
 
 template <class T> Operand<T>::Operand(){ /*-_-*/}
-template <class T> Operand<T>::~Operand(){ /*-_-*/ }
+template <class T> Operand<T>::~Operand(){	std::cout << "BY BY FROM " << __func__ << std::endl;}
 
 
 template class Operand<int8_t>;

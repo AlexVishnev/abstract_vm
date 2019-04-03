@@ -33,6 +33,10 @@
         "ctime": "cpp",
         "deque": "cpp",
         "iomanip": "cpp",
-        "cmath": "cpp"
+        "cmath": "cpp",
+        "bitset": "cpp",
+        "cstring": "cpp",
+        "memory": "cpp",
+        "numeric": "cpp"
     }
 }

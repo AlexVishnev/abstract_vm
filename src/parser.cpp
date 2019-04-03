@@ -38,10 +38,6 @@ void Parser::_read(const int mode, const char **cfg_file)
 				break ;
 		}
 	}
-
-	// PRINT_GREEN("TEST WHAT WRITED INTO LIST\n");
-	// for (std::string i : comands)
-	// 	std::cout << i << std::endl;
 }
 
 Parser &Parser::operator=(Parser const &ref)
