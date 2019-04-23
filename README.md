@@ -1,5 +1,11 @@
 # abstract_vm
 
+AbstractVM is a machine that uses a stack to compute simple arithmetic expressions.
+These arithmetic expressions are provided to the machine as basic assembly programs.
+
+
+
+COMMANDS
 
 • Comments: Comments start with a ’;’ and finish with a newline. A comment can
   be either at the start of a line, or after an instruction.
