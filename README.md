@@ -4,25 +4,22 @@ AbstractVM is a machine that uses a stack to compute simple arithmetic expressio
 These arithmetic expressions are provided to the machine as basic assembly programs.
 
 
-
 # COMMANDS
 
 • Comments: Comments start with a ’;’ and finish with a newline. A comment can
   be either at the start of a line, or after an instruction.
   
-• `push v` : Pushes the value "v" at the top of the stack. 
-    
-   The value v must have one of the following form:
+• `push v` : Pushes the value "v" at the top of the stack.
   
-    ◦ `int8(n)` : Creates an 8-bit integer with value n.
+    - int8(n)   : Creates an 8-bit integer with value n;
 
-    ◦ `int16(n)` : Creates a 16-bit integer with value n.
+    - int16(n)  : Creates a 16-bit integer with value n;
 
-    ◦ `int32(n)` : Creates a 32-bit integer with value n.
+    - int32(n)  : Creates a 32-bit integer with value n;
 
-    ◦ `float(z)` : Creates a float with value z.
+    - float(n)  : Creates a float with value n;
 
-    ◦ `double(z)` : Creates a double with value z.
+    - double(n) : Creates a double with value n;.
 
 • `pop` : Unstacks the value from the top of the stack. If the stack is empty, the
           program execution must stop with an error.
