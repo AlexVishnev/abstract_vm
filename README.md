@@ -5,7 +5,7 @@ These arithmetic expressions are provided to the machine as basic assembly progr
 
 
 
-COMMANDS
+#COMMANDS
 
 • Comments: Comments start with a ’;’ and finish with a newline. A comment can
   be either at the start of a line, or after an instruction.
