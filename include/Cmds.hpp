@@ -1,5 +1,5 @@
 #ifndef CMDS_HPP
-# define CMDS_HPP
+#define CMDS_HPP
 #include "Operand.hpp"
 
 enum cmd_type
@@ -22,12 +22,11 @@ enum cmd_type
 
 typedef struct s_cmds
 {
-	cmd_type		type;
-	eOperandType	oper_type;
-	std::string		strValue;
-	long double		value;
+	cmd_type type;
+	eOperandType oper_type;
+	std::string strValue;
+	long double value;
 
-}				t_cmds;
-
+} t_cmds;
 
 #endif
