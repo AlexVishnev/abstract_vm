@@ -1,0 +1,7 @@
+Few Tips:
+
+if stdin -> read every cmd and exec it
+
+if parse file print errors and maybe logging it
+
+write exceptions

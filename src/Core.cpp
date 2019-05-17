@@ -1,6 +1,5 @@
 #include "Core.hpp"
 #include "Exceptions.hpp"
-
 void	Core::__initd(const int mode, const char **cmd)
 {
 	parser._read(mode, cmd );

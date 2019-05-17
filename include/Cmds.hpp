@@ -4,8 +4,6 @@
 
 enum cmd_type
 {
-	Push,
-	Assert,
 	Pop,
 	Dump,
 	Print,
@@ -17,6 +15,9 @@ enum cmd_type
 	Pow,
 	Clear,
 	Exit,
+	Push,
+	Assert,
+	endlist,
 };
 
 typedef struct s_cmds
