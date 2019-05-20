@@ -37,6 +37,15 @@
         "bitset": "cpp",
         "cstring": "cpp",
         "memory": "cpp",
-        "numeric": "cpp"
+        "numeric": "cpp",
+        "atomic": "cpp",
+        "strstream": "cpp",
+        "chrono": "cpp",
+        "complex": "cpp",
+        "cstddef": "cpp",
+        "ratio": "cpp",
+        "thread": "cpp",
+        "cinttypes": "cpp",
+        "typeindex": "cpp"
     }
 }

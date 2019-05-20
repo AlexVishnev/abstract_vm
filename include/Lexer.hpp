@@ -11,10 +11,11 @@
 class Lexer
 {
 private:
-	enum cmd_type	TransformValueToCmdtype(std::string);
+	enum cmd_type		TransformValueToCmdtype(std::string &ref);
+	enum eOperandType	TransformValueToOtype(std::string &ref);
 public:
 	void	run_lexer(Parser &parser, std::list <std::string> *commands, std::list <t_cmds> *ref);
-	void	New_command(std::list <t_cmds> *cmd_quene, eOperandType o_type, std::string value, std::string c_type);
+	void	New_command(std::list <t_cmds> *cmd_quene, std::string condition, std::string &c_type);
 	void	check_commands();
 	Lexer();
 	~Lexer();
