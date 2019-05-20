@@ -12,10 +12,10 @@ void	Core::__initd(const int mode, const char **cmd)
 }
 void	Core::_exec()
 {
-	for (auto cmd : command_quene)
-	{
-		std::cout <<"cmd.type == " <<  cmd.type <<"\ncmd.oper_type == "<< cmd.oper_type <<"\ncmd.str_value == "<< cmd.strValue << std::endl;
-	}
+	// for (auto cmd : command_quene)
+	// {
+	// 	std::cout <<"cmd.type == " <<  cmd.type <<"\ncmd.oper_type == "<< cmd.oper_type <<"\ncmd.str_value == "<< cmd.strValue << std::endl;
+	// }
 	try 
 	{
 		for (auto cmd : command_quene)
@@ -145,7 +145,7 @@ void	Core::_mul()
 void	Core::_assert(t_cmds cmd)
 {
 	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ASSERT with empty stack\033[0m");
+		throw EmptyStackException("\033[0;31mError: Trying to ASSERT with empty stack\n\033[0m");
 
 	const IOperand *v1 = _stack.back();
 	_stack.pop_back();
@@ -155,7 +155,7 @@ void	Core::_assert(t_cmds cmd)
 	if (v1->getType() != v2->getType()) {
 		delete v1;
 		delete v2;
-		throw EmptyStackException("daun");
+		throw EmptyStackException("\033[0;31mError: asserting types not equal\n\033[0m");
 	}
 	if (std::stod(v1->toString()) != std::stod(v2->toString())) {
 		delete v1;
@@ -183,11 +183,11 @@ void	Core::_div()
 void	Core::_print()
 {
 	if (_stack.empty())
-		throw EmptyStackException("There is nothing ot print");
+		throw EmptyStackException("There is nothing ot print\n");
 	const IOperand *v1 = _stack.back();
 
 	if (v1->getType() != Int8)
-		throw EmptyStackException("int8");
+		throw EmptyStackException("\033[0;31mError: tying to print non char variable\n\033[0m");
 
 	std::cout << static_cast<char>(std::stoi(v1->toString())) << std::endl;
 }
@@ -271,8 +271,10 @@ Core::Core ()
 
 void Core::fill_default_commands()
 {
-	std::string	cmds[] = {  "pop", "dump", "add", "sub", "mul", 
-							"div", "mod", "print", "pow", "exit"};
+	std::string	cmds[] = {  "pop", "dump", "print", "add", 
+							"sub", "mul", "div", "mod" , "pow",
+							"exit", "clear", "push", "assert"
+							};
 	for (auto var: cmds)
 		_cmd_default.push_back(var);
 

@@ -10,7 +10,7 @@ enum eOperandType
 	Int32,
 	Float,
 	Double,
-	end,
+	End,
 };
 
 

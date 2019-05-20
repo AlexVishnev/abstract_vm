@@ -25,22 +25,22 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 	if (_operator == '+') {
 		if (first > 0 && second > 0) {
 			if ((first + second) < second)
-				throw UnderflowException("Under"); 
+				throw UnderflowException(("\033[0;31mError: Underflow after '-' operation \033[0m")); 
 		}
 		else if (first < 0 && second < 0) {
 			if (first < 0 && (first + second) > second)
-				throw OverflowException("Over");
+				throw OverflowException("\033[0;31mError: Overflow after '+' operation \033[0m");
 			else if ((first + second) < second)
-				throw UnderflowException("Under");
+				throw UnderflowException("\033[0;31mError: Underflow after '+' operation \033[0m");
 		}
 	}
 	else if (_operator == '*')
 	{
 		if (std::abs(first) > std::numeric_limits<T>::max() / std::abs(second)) {
 			if ((first > 0 && second > 0) || (first < 0 && second < 0))
-				throw OverflowException("Over");
+				throw OverflowException("\033[0;31mError: Overflow after '*' operation \033[0m");
 			else
-				throw UnderflowException("Under");
+				throw UnderflowException("\033[0;31mError: Underflow after '*' operation \033[0m");
 			
 		}
 	}
@@ -49,25 +49,25 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 		if (first > 0 && second < 0){
 			if ((std::numeric_limits<T>::max() / 2 < std::abs(first)) 
 				&& (std::numeric_limits<T>::max() / 2 < std::abs(first)))
-				throw OverflowException("Overflow");
+				throw OverflowException("\033[0;31mError: Overflow after '-' operation \033[0m");
 		}
 		else if (first < 0 && second > 0){
 			if ((std::numeric_limits<T>::max() / 2 < std::abs(first)) 
 				&& (std::numeric_limits<T>::max() / 2 < std::abs(first)))
-				throw UnderflowException("unredflow");
+				throw UnderflowException("\033[0;31mError: Underflow after '-' operation \033[0m");
 		}
 	}
 	else if (_operator == '/') {
 		if (second == 0)
-			throw DivByZeroException("div b 0");
+			throw DivByZeroException("\033[0;31mError: division by zero\033[0m");
 	}
 	else if (_operator == '%') {
 		if (second == 0)
-			throw DivByZeroException ("mod b 0");
+			throw DivByZeroException ("\033[0;31mError: modulo by zero\033[0m");
 	}
 	else if (_operator == '^') {
 		if (second > 32)
-			throw OverflowException("Error: pow overflow");
+			throw OverflowException("\033[0;31mError: Overflow after 'pow' operation \033[0m");
 	}
 }
 
@@ -99,7 +99,7 @@ template <class T> eOperandType Operand<T>::getType() const
 	else if (typeid(T) == typeid(double))
 		return (Double);
 	else
-		return (end);
+		return (End);
 }
 
 template <class T> IOperand const &Operand<T>::operator = (Operand const &ref)
@@ -220,7 +220,7 @@ template <class T> Operand<T>::Operand(Operand const &ref)
 }
 
 template <class T> Operand<T>::Operand(){ /*-_-*/}
-template <class T> Operand<T>::~Operand(){	std::cout << "BY BY FROM " << __func__ << std::endl;}
+template <class T> Operand<T>::~Operand(){/*	std::cout << "BY BY FROM " << __func__ << std::endl; */}
 
 
 template class Operand<int8_t>;

@@ -49,14 +49,17 @@ void Lexer::run_lexer(Parser &parser, std::list<std::string> *commands, std::lis
 
 enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 {
+
 	std::string DefValues[] = {"pop", "dump", "print",
 							   "add", "sub", "mul",
 							   "div", "mod", "pow",
 							   "clear", "exit", "push", "assert"};
-	for (size_t i = 0; i <  sizeof(DefValues) / sizeof(DefValues[0]); ++i)
+	for (size_t i = 0; i <  sizeof(DefValues) / sizeof(DefValues[0]); i++)
 	{
-		if (ValueType == DefValues[i])
+		if (ValueType == DefValues[i]) {
+			std::cout << "\tValueType\n\t\t" << ValueType << " " << i  <<  std::endl;
 			return static_cast<cmd_type>(i);
+		}
 	}
 	return static_cast<cmd_type>(13);
 }
@@ -69,7 +72,7 @@ enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
 	std::string DefValues[] = {"int8", "int16", "int32",
 							   "float", "double"};
 
-	for (size_t i = 0; i < sizeof(DefValues) / sizeof(DefValues[0]); ++i)
+	for (size_t i = 0; i < sizeof(DefValues) / sizeof(DefValues[0]); i++)
 	{
 		if (tmp == DefValues[i])
 			return static_cast<eOperandType>(i);
@@ -86,8 +89,8 @@ void Lexer::New_command(std::list<t_cmds> *cmd_quene,
 
 	if (condition == "several_params")
 	{
-		std::string tmp = c_type.find("push") == std::string::npos ? "push" : "assert";
-		cmd.type = TransformValueToCmdtype(c_type);
+		std::string tmp = c_type.find("push") == std::string::npos ? "assert": "push";
+		cmd.type = TransformValueToCmdtype(tmp);
 		cmd.oper_type = TransformValueToOtype(c_type);
 		
 		// std::cout << __func__ <<  "\n BEFORE CMD.STRVALUE " << " :"<< c_type << std::endl;
@@ -101,13 +104,16 @@ void Lexer::New_command(std::list<t_cmds> *cmd_quene,
 	{
 		// std::cout << "else condition " << __func__ << "\n"<<  c_type << std::endl;
 		cmd.type = TransformValueToCmdtype(c_type);
+		cmd.strValue = "0";
+		cmd.oper_type = End;
 		cmd_quene->push_back(cmd);
+
 	}
 }
 
-Lexer::Lexer(/* args */) { std::cout << "HELLO FROM " << __func__ << std::endl; }
+Lexer::Lexer(/* args */) { /*std::cout << "HELLO FROM " << __func__ << std::endl; */}
 
 Lexer::~Lexer()
 {
-	std::cout << "BY BY FROM " << __func__ << std::endl;
+	/*std::cout << "BY BY FROM " << __func__ << std::endl; */
 }
