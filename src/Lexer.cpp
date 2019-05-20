@@ -3,6 +3,7 @@
 
 void Lexer::run_lexer(Parser &parser, std::list<std::string> *commands, std::list<t_cmds> *cmd_quene)
 {
+	//TODO think about switch input
 	parser.is_filestream(2);
 
 	std::array<std::regex, 2> reg;
@@ -42,7 +43,7 @@ void Lexer::run_lexer(Parser &parser, std::list<std::string> *commands, std::lis
 			// }
 			
 		}
-		//todo THINK ABOUT HOW TO GET SEARCH REZUT AND SUBSEARCH AND TRANSFORM INTO OPER TYPES
+		//TODO parse error: idea delete valide messagess and analyse rest
 	}
 }
 
@@ -89,13 +90,16 @@ void Lexer::New_command(std::list<t_cmds> *cmd_quene,
 		cmd.type = TransformValueToCmdtype(c_type);
 		cmd.oper_type = TransformValueToOtype(c_type);
 		
-		std::cout << __func__ <<  "\n BEFORE CMD.STRVALUE " << " :"<< c_type << std::endl;
-		cmd.strValue = c_type.substr(c_type.find('('), c_type.find(')'));
+		// std::cout << __func__ <<  "\n BEFORE CMD.STRVALUE " << " :"<< c_type << std::endl;
+		cmd.strValue = c_type.substr(c_type.find('(') + 1, c_type.find(')') - 2);
+		cmd.strValue.pop_back();
+		// std::cout << __func__ <<  "\ncmd.strVal " << " :"<< cmd.strValue << std::endl;
+
 		cmd_quene->push_back(cmd);
 	}
 	else
 	{
-		std::cout << "else condition " << __func__ << " "<<  c_type << std::endl;
+		// std::cout << "else condition " << __func__ << "\n"<<  c_type << std::endl;
 		cmd.type = TransformValueToCmdtype(c_type);
 		cmd_quene->push_back(cmd);
 	}

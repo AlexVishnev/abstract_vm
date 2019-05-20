@@ -12,6 +12,10 @@ void	Core::__initd(const int mode, const char **cmd)
 }
 void	Core::_exec()
 {
+	for (auto cmd : command_quene)
+	{
+		std::cout <<"cmd.type == " <<  cmd.type <<"\ncmd.oper_type == "<< cmd.oper_type <<"\ncmd.str_value == "<< cmd.strValue << std::endl;
+	}
 	try 
 	{
 		for (auto cmd : command_quene)
@@ -56,12 +60,24 @@ void	Core::_exec()
 						break;
 				case Exit:
 						return ;
+				default:
+						std::cout << "LOOOl" << std::endl;
 			}
 		}
 	}
 	catch (EmptyStackException &e) {
 		std::cerr << e.what() << std::endl;
 	}
+	catch (OverflowException &e) {
+		std::cerr << e.what() << std::endl;
+	}
+	catch (UnderflowException &e) {
+		std::cerr << e.what() << std::endl;
+	}
+	catch (DivByZeroException &e) {
+		std::cerr << e.what() << std::endl;
+	}
+	//ADD cathcers
 }
 
 
@@ -73,9 +89,9 @@ void	Core::_pow()
 {
 	_get_elements_from_stack();
 	if (first != nullptr && second != nullptr) {
-
+//try
 		rezult = *first ^ *second;
-
+//catch
 		_stack.push_back(rezult);
 		delete first;
 		delete second;
@@ -238,10 +254,9 @@ Core &Core::operator=(Core const &ref)
 void Core::_get_elements_from_stack()
 {
 	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
+		throw EmptyStackException("\033[0;31mError: empty stack\n\033[0m");
 	if (_stack.size() < 2)
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
-
+		throw EmptyStackException("\033[0;31mError: not enought elemetns for operation\n\033[0m");
 	first =_stack.back();
 	_stack.pop_back();
 	second = _stack.back();;

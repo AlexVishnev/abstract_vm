@@ -19,7 +19,7 @@ template <class T>Operand<T>::Operand(T value): _value(value)
 
 }
 
-//TODO
+//TODO WRITE CATHCERS
 template <class T> void Operand<T>::operations_check(T first, T second, char _operator) const
 {
 	if (_operator == '+') {
