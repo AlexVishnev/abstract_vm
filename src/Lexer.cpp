@@ -48,12 +48,11 @@ void Lexer::run_lexer(Parser &parser, std::list<std::string> *commands, std::lis
 
 enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 {
-
 	std::string DefValues[] = {"pop", "dump", "print",
 							   "add", "sub", "mul",
 							   "div", "mod", "pow",
 							   "clear", "exit", "push", "assert"};
-	for (size_t i = 0; i < 10; ++i)
+	for (size_t i = 0; i <  sizeof(DefValues) / sizeof(DefValues[0]); ++i)
 	{
 		if (ValueType == DefValues[i])
 			return static_cast<cmd_type>(i);
@@ -62,11 +61,10 @@ enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 }
 enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
 {
-	std::cout << std::endl << "\n\nbefore earase val ==" <<ValueType << std::endl;
 	ValueType.erase(0, ValueType.find("push") == std::string::npos ? 7 : 5);
-	std::cout << std::endl << "\n\nafter earase val ==" <<ValueType << std::endl;
 	std::string	tmp = ValueType.substr(0, ValueType.find('('));
-	std::cout << "T M P\n\n\n" << tmp << std::endl;
+
+	// std::cout << "T M P\n\n\n" << tmp << std::endl;
 	std::string DefValues[] = {"int8", "int16", "int32",
 							   "float", "double"};
 
@@ -75,7 +73,7 @@ enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
 		if (tmp == DefValues[i])
 			return static_cast<eOperandType>(i);
 	}
-	return static_cast<eOperandType>(6);
+	return static_cast<eOperandType>(5);
 }
 
 void Lexer::New_command(std::list<t_cmds> *cmd_quene,
@@ -88,11 +86,11 @@ void Lexer::New_command(std::list<t_cmds> *cmd_quene,
 	if (condition == "several_params")
 	{
 		std::string tmp = c_type.find("push") == std::string::npos ? "push" : "assert";
-		cmd.type = TransformValueToCmdtype(tmp);
+		cmd.type = TransformValueToCmdtype(c_type);
 		cmd.oper_type = TransformValueToOtype(c_type);
 		
-		std::cout << __func__ <<  " if condition " << " :"<< c_type << std::endl;
-		cmd.strValue = condition;
+		std::cout << __func__ <<  "\n BEFORE CMD.STRVALUE " << " :"<< c_type << std::endl;
+		cmd.strValue = c_type.substr(c_type.find('('), c_type.find(')'));
 		cmd_quene->push_back(cmd);
 	}
 	else
