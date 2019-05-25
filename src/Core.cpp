@@ -217,6 +217,7 @@ void	Core::_pop()
 
 void	Core::_push(t_cmds	cmd)
 {
+	std::cout << "PUSH  BLYAD " << cmd.oper_type << "  " << cmd.strValue << std::endl;
 	_stack.push_back(Factory().createOperand(cmd.oper_type, cmd.strValue));
 }
 
@@ -225,12 +226,17 @@ void Core::_dump()
 {
 
 	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ADD with empty stack\033[0m");
-
-	for (auto i = _stack.end(); i != _stack.begin(); --i)
+		throw EmptyStackException("\033[0;31mInfo: there is nothing to dump\033[0m"); //change to yellow clr
+	
+	int j = 0;
+	
+	for (auto i = _stack.end(); i != _stack.begin(); i--)
 	{
+		std::cout << j << std::endl;
+		j++;
 		if (*i != nullptr)
 			PRINT_GREEN((*i)->toString());
+
 	}
 }
 

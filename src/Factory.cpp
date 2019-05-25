@@ -2,7 +2,16 @@
 
 IOperand const *Factory::createOperand(eOperandType type, std::string const &value) const
 {
-	return ((*this.*core_quene.at(type))(value));
+		const IOperand *(Factory::*func[5])(std::string const & value) const = {
+		&Factory::createInt8, 
+		&Factory::createInt16,
+		&Factory::createInt32,
+		&Factory::createFloat,
+		&Factory::createDouble
+	};
+	IOperand const * newOperand = (this->*func[type])(value);
+	return newOperand;
+	// return ((*this.*core_quene.at(type))(value));
 }
 
 IOperand const *Factory::createInt8  (std::string const &value ) const

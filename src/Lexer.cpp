@@ -7,7 +7,7 @@ void Lexer::run_lexer(Parser &parser, std::list<std::string> *commands, std::lis
 	parser.is_filestream(2);
 
 	std::array<std::regex, 2> reg;
-	reg[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|exit)((\\s)+)?(;(.+)?)?";
+	reg[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|dump|exit)((\\s)+)?(;(.+)?)?";
 	reg[1] = "((\\s)+)?(push|assert)((\\s)+)?"
 			 "(int8|int16|int32|float|double)((\\s)+)?"
 			 "\\(((\\s)+)?"

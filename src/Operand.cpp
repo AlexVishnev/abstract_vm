@@ -16,6 +16,7 @@ template <class T>Operand<T>::Operand(T value): _value(value)
 		set << std::setprecision(14) << value;
 		_buffer = set.str();
 	}
+	std::cout << "HELLO BLYAD " << _buffer + " " + __func__ << std::endl;
 
 }
 
@@ -72,6 +73,7 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 }
 
 template <class T> std::string const &Operand<T>::toString() const {
+
 	return (_buffer);
 }
 
