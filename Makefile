@@ -7,7 +7,7 @@ INC_PATH = ./include/
 
 INC =  
 
-SRC =	main.cpp Core.cpp Parser.cpp Factory.cpp Operand.cpp Lexer.cpp
+SRC =	main.cpp Core.cpp Parser.cpp Factory.cpp Operand.cpp Lexer.cpp Exceptions.cpp
 
 OBJ = $(SRC:.cpp=.o)
 OBJ_DIR = obj

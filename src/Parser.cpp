@@ -2,38 +2,43 @@
 
 bool Parser::is_filestream(const int mode)
 {
-	if (mode != 2)
-		PRINT_RED("\nInfo: no file detect using stdin");
 	return (mode == 2);
 }
 
-std::list <std::string> *Parser::get_list_commands()
+std::list <std::string> *Parser::GetCommandsList()
 {
-	return (&this->comands);
+	return (&this->Commands);
 }
 void Parser::_read(const int mode, const char **cfg_file)
 {
 	if (is_filestream(mode))
-		file_path = cfg_file[1];
+		FilePath = cfg_file[1];
+	else{
+		FilePath = "UserInput";
+		PRINT_WARNING("INFO:  Using standart input for declaring commands\n\
+	  Write comands separated by 'Enter' for adding them into command quene \n\
+	  Press 'Ctrl + D' for execution commands\n");
+	}
 	
-	PRINT_GREEN(file_path);
 
-	std::ifstream file(file_path);
+
+	std::ifstream file(FilePath);
 	std::string buffer;
 
 	if (file.is_open() && !file.eof()) {
+
+		PRINT_GREEN(FilePath);
 		while (std::getline(file, buffer))
 		{
-			if (buffer[0] != ';')
-				comands.push_back(buffer);
-
+			// if (buffer[0] != ';' && buffer[0] != '\0')
+				Commands.push_back(buffer);
 		}
 		file.close();
 	}
 	else {
 		while (std::getline(std::cin, buffer))
 		{
-			comands.push_back(buffer);
+			Commands.push_back(buffer);
 			if (buffer == ";;" || buffer == "exit")
 				break ;
 		}
@@ -43,14 +48,19 @@ void Parser::_read(const int mode, const char **cfg_file)
 Parser &Parser::operator=(Parser const &ref)
 {
 	if (this != &ref){
-		file_path = ref.file_path;
-		comands = ref.comands;
+		FilePath = ref.FilePath;
+		Commands = ref.Commands;
 	}
 	return *this;
 }
-Parser::Parser(){}
 
-Parser::~Parser()
+std::string& Parser::GetFilePath()
 {
-	std::cout << "BY BY FROM " << __func__ << std::endl;
+	return this->FilePath;
+}
+Parser::Parser(){
+
+}
+
+Parser::~Parser(){
 }

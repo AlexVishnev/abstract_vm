@@ -30,6 +30,7 @@ public:
 	void	_pow();
 	void	_print();
 	void	_clear();
+	void	_exit();
 	void	__initd(const int mode, const char **cmd);
 
 protected:
@@ -37,22 +38,20 @@ protected:
 	Parser			parser;
 	Lexer			lexer;
 	
-	std::list <t_cmds> command_quene;
-	bool			overflow_check(IOperand const *, IOperand const *, int8_t );
+	// bool			overflow_check(IOperand const *, IOperand const *, int8_t );
 
+	std::list <t_cmds>				CommandQueue;
 	std::list <std::string> 		_cmd_default;
 	std::list <IOperand const *>	_stack;
 private:
-	
 	
 	IOperand const	*first;
 	IOperand const	*second;
 	IOperand const	*rezult;
 	
 	void			_exec();
-	void			draw_logo();
-	void			fill_default_commands();
-
+	void			DrawLogo();
+	void			FillDefaultCommands();
 
 };
 

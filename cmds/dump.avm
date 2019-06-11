@@ -2,11 +2,34 @@
 ; exemple.avm -
 ; -------------
 
-push int32(10)
-push int32(0)
+push int16(102)
+
+push int8(10)
+
+assert int8(10)
+
+push int32(90000)
+
+
+push int32(102)
+
+push int32(102)
+
+push int32(102)
+
+push int32(103)
+
+div
+
+div
+
 div
 dump
+add
+dump
+mul
 
-;print
-;assert double(42.42)
+mul
+
+
 exit

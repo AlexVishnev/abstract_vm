@@ -25,6 +25,8 @@ public:
 		return (msg.c_str());
 	}
 
+	virtual ~OverflowException(){}
+
 private:
 	std::string		msg;
 };
@@ -37,6 +39,7 @@ public:
 		return (msg.c_str());
 	}
 
+	virtual ~UnderflowException(){}
 private:
 	std::string		msg;
 };
@@ -49,9 +52,22 @@ public:
 	virtual const char *what() const throw() override {
 		return msg.c_str();
 	}
+	virtual ~DivByZeroException(){}
 private:
 	std::string	msg;
 };
 
+class	LexerException : std::exception
+{
+
+public:
+	explicit LexerException(const std::string &message): msg(message){}
+	virtual const char *what() const throw() override {
+		return msg.c_str();
+	}
+	virtual ~LexerException(){}
+private:
+	std::string	msg;
+};
 
 #endif

@@ -2,16 +2,7 @@
 
 IOperand const *Factory::createOperand(eOperandType type, std::string const &value) const
 {
-		const IOperand *(Factory::*func[5])(std::string const & value) const = {
-		&Factory::createInt8, 
-		&Factory::createInt16,
-		&Factory::createInt32,
-		&Factory::createFloat,
-		&Factory::createDouble
-	};
-	IOperand const * newOperand = (this->*func[type])(value);
-	return newOperand;
-	// return ((*this.*core_quene.at(type))(value));
+	return ((*this.*CoreQueue.at(type))(value));
 }
 
 IOperand const *Factory::createInt8  (std::string const &value ) const
@@ -86,16 +77,16 @@ IOperand const *Factory::createDouble(std::string const &value ) const
 Factory &Factory::operator = (Factory const &ref)
 {
 	if (this != &ref)
-		this->core_quene = ref.core_quene;
+		this->CoreQueue = ref.CoreQueue;
 	return *this;
 }
 
 Factory::Factory()
 {
-	core_quene.push_back(&Factory::createInt8);
-	core_quene.push_back(&Factory::createInt16);
-	core_quene.push_back(&Factory::createInt32);
-	core_quene.push_back(&Factory::createFloat);
-	core_quene.push_back(&Factory::createDouble);
+	CoreQueue.push_back(&Factory::createInt8);
+	CoreQueue.push_back(&Factory::createInt16);
+	CoreQueue.push_back(&Factory::createInt32);
+	CoreQueue.push_back(&Factory::createFloat);
+	CoreQueue.push_back(&Factory::createDouble);
 }
 Factory::~Factory(){/*	std::cout << "BY BY FROM " << __func__ << std::endl; */}

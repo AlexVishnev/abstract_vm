@@ -1,14 +1,12 @@
 #ifndef PARSER_HPP 
 # define PARSER_HPP
 
-
-
 #include <list>
 #include <fstream>
 #include <iostream>
+#include "defines.hpp"
 
-#define PRINT_GREEN(x) std::cout << "\033[0;32m" << x << "\033[0m" << std::endl;
-#define PRINT_RED(x) std::cout << "\033[0;31m" << x << "\033[0m" << std::endl;
+
 class Parser
 {
 
@@ -18,13 +16,14 @@ public:
 	Parser &operator=(const Parser &ref);
 	~Parser();
 	
-	void	_read(const int mode, const char **cfg_file);
-	bool	is_filestream(const int mode);
-	std::list <std::string> *get_list_commands();
+	std::string  &GetFilePath();
+	void			_read(const int mode, const char **cfg_file);
+	bool			is_filestream(const int mode);
+	std::list <std::string> *GetCommandsList();
 
 private:
-	std::string					file_path;
-	std::list <std::string >	comands;
+	std::string					FilePath;
+	std::list <std::string >	Commands;
 };
 
 #endif // !PARSER_HPP 

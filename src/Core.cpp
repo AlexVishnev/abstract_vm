@@ -2,8 +2,17 @@
 #include "Exceptions.hpp"
 void	Core::__initd(const int mode, const char **cmd)
 {
-	parser._read(mode, cmd );
-	lexer.run_lexer(parser, parser.get_list_commands(), &command_quene);
+	parser._read(mode, cmd);
+	try
+	{
+		lexer.StartTokenizing(parser, parser.GetCommandsList(), &CommandQueue);
+
+	}
+	catch(LexerException &e)
+	{
+		std::cerr << e.what() << '\n';
+	}
+	
 	//Parse file
 	//Lexer analys
 	//start exec Core
@@ -12,13 +21,9 @@ void	Core::__initd(const int mode, const char **cmd)
 }
 void	Core::_exec()
 {
-	// for (auto cmd : command_quene)
-	// {
-	// 	std::cout <<"cmd.type == " <<  cmd.type <<"\ncmd.oper_type == "<< cmd.oper_type <<"\ncmd.str_value == "<< cmd.strValue << std::endl;
-	// }
 	try 
 	{
-		for (auto cmd : command_quene)
+		for (auto cmd : CommandQueue)
 		{
 			switch (cmd.type)
 			{
@@ -59,27 +64,33 @@ void	Core::_exec()
 						_clear();
 						break;
 				case Exit:
-						return ;
+						_exit();
 				default:
 						std::cout << "LOOOl" << std::endl;
 			}
 		}
 	}
 	catch (EmptyStackException &e) {
-		std::cerr << e.what() << std::endl;
+		PRINT_ERROR(e.what());
 	}
 	catch (OverflowException &e) {
-		std::cerr << e.what() << std::endl;
+		PRINT_ERROR(e.what());
 	}
 	catch (UnderflowException &e) {
-		std::cerr << e.what() << std::endl;
+		PRINT_ERROR(e.what());
 	}
 	catch (DivByZeroException &e) {
-		std::cerr << e.what() << std::endl;
+		PRINT_ERROR(e.what());
+	}
+	catch (LexerException &e){
+		PRINT_ERROR(e.what());
 	}
 	//ADD cathcers
 }
 
+void	Core::_exit(){
+	exit(0);
+}
 
 void	Core::_clear()
 {
@@ -145,27 +156,28 @@ void	Core::_mul()
 void	Core::_assert(t_cmds cmd)
 {
 	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to ASSERT with empty stack\n\033[0m");
+		throw EmptyStackException(RED"Runtime error:\033[0m Trying to ASSERT on empty stack");
 
 	const IOperand *v1 = _stack.back();
-	_stack.pop_back();
 
 	const IOperand *v2 = Factory().createOperand(cmd.oper_type, cmd.strValue);
 
 	if (v1->getType() != v2->getType()) {
 		delete v1;
 		delete v2;
-		throw EmptyStackException("\033[0;31mError: asserting types not equal\n\033[0m");
+		throw EmptyStackException(RED"Asserting error:\033[0m asserting types not equal");
 	}
-	if (std::stod(v1->toString()) != std::stod(v2->toString())) {
-		delete v1;
-		delete v2;
-		throw EmptyStackException("lol");
-	}
-	delete v1;
-	delete v2;
 
+	if (std::stod(v1->toString()) != std::stod(v2->toString())) {
+		PRINT_WARNING("ASSERT FALSE");
+	}
+	else
+		PRINT_GREEN("ASSERT TRUE");
+
+	delete v2;
 }
+
+
 void	Core::_div()
 {
 	_get_elements_from_stack();
@@ -183,11 +195,11 @@ void	Core::_div()
 void	Core::_print()
 {
 	if (_stack.empty())
-		throw EmptyStackException("There is nothing ot print\n");
+		throw EmptyStackException(RED"Error:\033[0m There is nothing ot print\n");
 	const IOperand *v1 = _stack.back();
 
 	if (v1->getType() != Int8)
-		throw EmptyStackException("\033[0;31mError: tying to print non char variable\n\033[0m");
+		throw EmptyStackException(RED"Error:\033[0m tying to print non char variable");
 
 	std::cout << static_cast<char>(std::stoi(v1->toString())) << std::endl;
 }
@@ -208,7 +220,7 @@ void	Core::_sub()
 void	Core::_pop()
 {
 	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: Trying to POP with empty stack\033[0m");
+		throw EmptyStackException(RED"Runtime error:\033[0m Trying to POP with empty stack");
 	else
 		_stack.pop_back();
 
@@ -217,7 +229,6 @@ void	Core::_pop()
 
 void	Core::_push(t_cmds	cmd)
 {
-	std::cout << "PUSH  BLYAD " << cmd.oper_type << "  " << cmd.strValue << std::endl;
 	_stack.push_back(Factory().createOperand(cmd.oper_type, cmd.strValue));
 }
 
@@ -226,17 +237,13 @@ void Core::_dump()
 {
 
 	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mInfo: there is nothing to dump\033[0m"); //change to yellow clr
-	
-	int j = 0;
-	
-	for (auto i = _stack.end(); i != _stack.begin(); i--)
-	{
-		std::cout << j << std::endl;
-		j++;
-		if (*i != nullptr)
-			PRINT_GREEN((*i)->toString());
+		throw EmptyStackException(RED"Runtime error:\033[0m there is nothing to dump\n"); //change to yellow clr
 
+	for (auto i = _stack.end(); i != _stack.begin(); )
+	{
+		--i;
+		if (*i != nullptr && !(*i)->toString().empty())
+		PRINT_GREEN((*i)->toString());
 	}
 }
 
@@ -260,9 +267,9 @@ Core &Core::operator=(Core const &ref)
 void Core::_get_elements_from_stack()
 {
 	if (_stack.empty())
-		throw EmptyStackException("\033[0;31mError: empty stack\n\033[0m");
+		throw EmptyStackException(RED"Runtime error:\033[0m empty stack\n");
 	if (_stack.size() < 2)
-		throw EmptyStackException("\033[0;31mError: not enought elemetns for operation\n\033[0m");
+		throw EmptyStackException(RED"Runtime error:\033[0m not enought elements on stack for operation\n");
 	first =_stack.back();
 	_stack.pop_back();
 	second = _stack.back();;
@@ -271,11 +278,11 @@ void Core::_get_elements_from_stack()
 
 Core::Core ()
 {
-	draw_logo();
-	fill_default_commands();
+	DrawLogo();
+	FillDefaultCommands();
 }
 
-void Core::fill_default_commands()
+void Core::FillDefaultCommands()
 {
 	std::string	cmds[] = {  "pop", "dump", "print", "add", 
 							"sub", "mul", "div", "mod" , "pow",
@@ -286,7 +293,7 @@ void Core::fill_default_commands()
 
 }
 
-void Core::draw_logo()
+void Core::DrawLogo()
 {
 	std::list <std::string> logo;
 
@@ -311,7 +318,5 @@ void Core::draw_logo()
 	logo.clear();
 }
 
-Core::~Core()
-{
-	std::cout << "by by from  " << __func__ << std::endl;
+Core::~Core() {
 }

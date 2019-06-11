@@ -1,4 +1,5 @@
 #include "Operand.hpp"
+#include "defines.hpp"
 
 template <class T>Operand<T>::Operand(T value): _value(value)
 {
@@ -16,8 +17,6 @@ template <class T>Operand<T>::Operand(T value): _value(value)
 		set << std::setprecision(14) << value;
 		_buffer = set.str();
 	}
-	std::cout << "HELLO BLYAD " << _buffer + " " + __func__ << std::endl;
-
 }
 
 //TODO WRITE CATHCERS
@@ -26,22 +25,22 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 	if (_operator == '+') {
 		if (first > 0 && second > 0) {
 			if ((first + second) < second)
-				throw UnderflowException(("\033[0;31mError: Underflow after '-' operation \033[0m")); 
+				throw UnderflowException(RED"Calculation error: \033[0m Underflow after '+' operation"); 
 		}
 		else if (first < 0 && second < 0) {
 			if (first < 0 && (first + second) > second)
-				throw OverflowException("\033[0;31mError: Overflow after '+' operation \033[0m");
+				throw OverflowException(RED"Calculation error: \033[0m Overflow after '+' operation");
 			else if ((first + second) < second)
-				throw UnderflowException("\033[0;31mError: Underflow after '+' operation \033[0m");
+				throw UnderflowException(RED"Calculation error: \033[0m Underflow after '+' operation");
 		}
 	}
 	else if (_operator == '*')
 	{
 		if (std::abs(first) > std::numeric_limits<T>::max() / std::abs(second)) {
 			if ((first > 0 && second > 0) || (first < 0 && second < 0))
-				throw OverflowException("\033[0;31mError: Overflow after '*' operation \033[0m");
+				throw OverflowException(RED"Calculation error: \033[0m Overflow after '*' operation ");
 			else
-				throw UnderflowException("\033[0;31mError: Underflow after '*' operation \033[0m");
+				throw UnderflowException(RED"Calculation error: \033[0m Underflow after '*' operation ");
 			
 		}
 	}
@@ -50,31 +49,31 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 		if (first > 0 && second < 0){
 			if ((std::numeric_limits<T>::max() / 2 < std::abs(first)) 
 				&& (std::numeric_limits<T>::max() / 2 < std::abs(first)))
-				throw OverflowException("\033[0;31mError: Overflow after '-' operation \033[0m");
+				throw OverflowException(RED"Calculation error: \033[0m Overflow after '-' operation ");
 		}
 		else if (first < 0 && second > 0){
 			if ((std::numeric_limits<T>::max() / 2 < std::abs(first)) 
 				&& (std::numeric_limits<T>::max() / 2 < std::abs(first)))
-				throw UnderflowException("\033[0;31mError: Underflow after '-' operation \033[0m");
+				throw UnderflowException(RED"Calculation error: \033[0m Underflow after '-' operation ");
 		}
 	}
 	else if (_operator == '/') {
 		if (second == 0)
-			throw DivByZeroException("\033[0;31mError: division by zero\033[0m");
+			throw DivByZeroException(RED"Calculation error: \033[0m division by zero");
 	}
 	else if (_operator == '%') {
 		if (second == 0)
-			throw DivByZeroException ("\033[0;31mError: modulo by zero\033[0m");
+			throw DivByZeroException (RED"Calculation error: \033[0m modulo by zero");
 	}
 	else if (_operator == '^') {
 		if (second > 32)
-			throw OverflowException("\033[0;31mError: Overflow after 'pow' operation \033[0m");
+			throw OverflowException(RED"Calculation error:\033[0m Overflow 'pow' operation ");
 	}
 }
 
 template <class T> std::string const &Operand<T>::toString() const {
 
-	return (_buffer);
+	return (this->_buffer);
 }
 
 template <class T> int Operand<T>::getPrecision() const

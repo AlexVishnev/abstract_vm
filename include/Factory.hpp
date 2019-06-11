@@ -22,7 +22,7 @@ private:
 	IOperand const *createDouble(std::string const & value ) const;
 
 
-	std::vector <IOperand const *(Factory::*)(std::string const &value) const > core_quene;
+	std::vector <IOperand const *(Factory::*)(std::string const &value) const > CoreQueue;
 
 };
 
