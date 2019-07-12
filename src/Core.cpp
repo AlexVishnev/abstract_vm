@@ -5,22 +5,42 @@
 void	Core::__initd(const int mode, const char **cmd)
 {
 	parser._read(mode, cmd);
-	try
-	{
-		lexer.StartTokenizing(parser, parser.GetCommandsList(), &CommandQueue);
 
+	if (!parser.is_filestream(mode)){
+		std::string buffer;
+		while (std::getline(std::cin, buffer))
+		{
+			parser.GetCommandsList()->push_back(buffer);
+
+				try {
+					lexer.StartTokenizing(parser, parser.GetCommandsList(), &CommandQueue, true);
+				}
+				catch (LexerException &e) {
+					std::cerr << e.what() << std::endl;
+				}
+			_exec();
+			
+			for (std::string tmp : *parser.GetCommandsList())
+				std::cout << tmp << std::endl;
+				
+			if (buffer == ";;" || buffer == "exit")
+				break ;
+		}
 	}
-	catch(LexerException &e)
-	{
-		std::cerr << e.what() << '\n';
-	}
-	
+	 else {
+		try {
+			lexer.StartTokenizing(parser, parser.GetCommandsList(), &CommandQueue, false);
+		}
+		catch(LexerException &e) {
+			std::cerr << e.what() << std::endl;
+		}
 	//Parse file
 	//Lexer analys
 	//start exec Core
 	_exec();
-
+	}
 }
+
 void	Core::_exec()
 {
 	try 
@@ -68,7 +88,7 @@ void	Core::_exec()
 				case Exit:
 						_exit();
 				default:
-						std::cout << "LOOOl" << std::endl;
+						std::cout << "CHAGE THIS MESSAGE" << std::endl;
 			}
 		}
 	}

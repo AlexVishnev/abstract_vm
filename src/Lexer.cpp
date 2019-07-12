@@ -1,11 +1,12 @@
 #include "Lexer.hpp"
 
 
-void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *commands, std::list<t_cmds> *CmdQueue)
+void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *commands, std::list<t_cmds> *CmdQueue, bool istream)
 {
 	std::array<std::regex, 2> reg;
 	std::smatch base_mach;
 	std::smatch piece;
+
 
 	reg[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|dump|exit)((\\s)+)?(;(.+)?)?";
 	reg[1] = "((\\s)+)?(push|assert)((\\s)+)?"
@@ -15,7 +16,8 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *commands, st
 			 "\\)((\\s)+)?"
 			 "(;(.+)?)?";
 
-	if (!CheckForExitCommand(commands))
+	this->istream = istream;
+	if (!CheckForExitCommand(commands) && !istream)
 		throw LexerException(RED"Lexer error:\033[0m no exit command");
 
 	for (std::string &Command : *commands)
@@ -112,7 +114,14 @@ void Lexer::AnalyseCommandQueue(std::list <std::string> *CommandsQueue, std::str
 	for (std::string &Command: *CommandsQueue)
 	{
 		if (!Command.empty() && Command[0] != ';' && Command.find_first_not_of(' ') != std::string::npos){
-			std::cerr << FilePath <<":" << line << ":\033[0;31m" << " lexer error:" << "\033[0m" << " Unrecognized command  " << "\'" 
+
+			if (this->istream){
+				std::cerr << FilePath << ":\033[0;31m" << " lexer error:" << "\033[0m" << " Unrecognized command  " << "\'" 
+				<< Command  << "\'" << std::endl;
+				Command.clear();
+			}
+			else
+				std::cerr << FilePath <<":" << line << ":\033[0;31m" << " lexer error:" << "\033[0m" << " Unrecognized command  " << "\'" 
 				<< Command  << "\'" << std::endl;
 		}
 		line++;

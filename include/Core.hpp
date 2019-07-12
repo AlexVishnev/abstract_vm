@@ -16,6 +16,8 @@ public:
 	~Core();
 	Core &operator=(const Core &ref);
 	Core(Core const &ref);
+	
+	friend class Parser;
 
 	void	_push(t_cmds comadnds);
 	void	_assert(t_cmds comadnds);

@@ -13,11 +13,11 @@ void Parser::_read(const int mode, const char **cfg_file)
 {
 	if (is_filestream(mode))
 		FilePath = cfg_file[1];
-	else{
+	else {
 		FilePath = "UserInput";
 		PRINT_WARNING("INFO:  Using standart input for declaring commands\n\
 	  Write comands separated by 'Enter' for adding them into command quene \n\
-	  Press 'Ctrl + D' for execution commands\n");
+	  Type 'Ctrl + D || ;; || exit for execution commands\n");
 	}
 	
 
@@ -26,21 +26,22 @@ void Parser::_read(const int mode, const char **cfg_file)
 
 	if (file.is_open() && !file.eof()) {
 
-		PRINT_GREEN(FilePath);
+		// PRINT_GREEN(FilePath);
 		while (std::getline(file, buffer))
-		{
 			Commands.push_back(buffer);
-		}
+
 		file.close();
 	}
 	else {
-		while (std::getline(std::cin, buffer))
-		{
-			Commands.push_back(buffer);
-			if (buffer == ";;" || buffer == "exit")
-				break ;
-		}
+		// while (std::getline(std::cin, buffer))
+		// {
+		// 	Commands.push_back(buffer);
+		// 	if (buffer == ";;" || buffer == "exit")
+		// 		break ;
+		// }
+		return ;
 	}
+
 }
 
 Parser &Parser::operator=(Parser const &ref)
