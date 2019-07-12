@@ -1,5 +1,7 @@
 #include "Core.hpp"
 #include "Exceptions.hpp"
+
+
 void	Core::__initd(const int mode, const char **cmd)
 {
 	parser._read(mode, cmd);
@@ -92,8 +94,7 @@ void	Core::_exit(){
 	exit(0);
 }
 
-void	Core::_clear()
-{
+void	Core::_clear() {
 	_stack.clear();
 }
 void	Core::_pow()
@@ -136,7 +137,6 @@ void	Core::_add()
 		delete second;
 	}
 }
-
 
 
 void	Core::_mul()
@@ -247,10 +247,7 @@ void Core::_dump()
 	}
 }
 
-
-
-Core::Core(Core const &ref)
-{
+Core::Core(Core const &ref) {
 	*this = ref;
 }
 
@@ -276,8 +273,7 @@ void Core::_get_elements_from_stack()
 	_stack.pop_back();
 }
 
-Core::Core ()
-{
+Core::Core() {
 	DrawLogo();
 	FillDefaultCommands();
 }
@@ -318,5 +314,4 @@ void Core::DrawLogo()
 	logo.clear();
 }
 
-Core::~Core() {
-}
+Core::~Core(){ }

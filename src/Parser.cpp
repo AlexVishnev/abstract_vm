@@ -21,7 +21,6 @@ void Parser::_read(const int mode, const char **cfg_file)
 	}
 	
 
-
 	std::ifstream file(FilePath);
 	std::string buffer;
 
@@ -30,8 +29,7 @@ void Parser::_read(const int mode, const char **cfg_file)
 		PRINT_GREEN(FilePath);
 		while (std::getline(file, buffer))
 		{
-			// if (buffer[0] != ';' && buffer[0] != '\0')
-				Commands.push_back(buffer);
+			Commands.push_back(buffer);
 		}
 		file.close();
 	}
@@ -54,7 +52,7 @@ Parser &Parser::operator=(Parser const &ref)
 	return *this;
 }
 
-std::string& Parser::GetFilePath()
+std::string &Parser::GetFilePath()
 {
 	return this->FilePath;
 }

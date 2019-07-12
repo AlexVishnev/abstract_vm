@@ -18,7 +18,7 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *commands, st
 	if (!CheckForExitCommand(commands))
 		throw LexerException(RED"Lexer error:\033[0m no exit command");
 
-	for (auto &Command : *commands)
+	for (std::string &Command : *commands)
 	{
 		std::cout << "commands == [" <<  Command << "]"<< std::endl; 
 		for (size_t i = 0; i < reg.size(); ++i)
@@ -61,6 +61,7 @@ enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 	}
 	return static_cast<cmd_type>(13);
 }
+
 enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
 {
 	ValueType.erase(0, ValueType.find("push") == std::string::npos ? 7 : 5);
@@ -86,7 +87,7 @@ void Lexer::CreateNewCommand(std::list<t_cmds> *CmdQueue,
 
 	if (condition == "several_params")
 	{
-		std::string tmp = c_type.find("push") == std::string::npos ? "assert": "push";
+		std::string tmp = c_type.find("push") == std::string::npos ? "assert" : "push";
 		cmd.type = TransformValueToCmdtype(tmp);
 		cmd.oper_type = TransformValueToOtype(c_type);
 
@@ -108,7 +109,7 @@ void Lexer::AnalyseCommandQueue(std::list <std::string> *CommandsQueue, std::str
 {
 	int16_t line = 1;
 
-	for (auto &Command: *CommandsQueue)
+	for (std::string &Command: *CommandsQueue)
 	{
 		if (!Command.empty() && Command[0] != ';' && Command.find_first_not_of(' ') != std::string::npos){
 			std::cerr << FilePath <<":" << line << ":\033[0;31m" << " lexer error:" << "\033[0m" << " Unrecognized command  " << "\'" 
@@ -122,7 +123,7 @@ bool Lexer::CheckForExitCommand(std::list <std::string> *CommandQueue)
 {
 	int exitAmounts = 0; 
 
-	for (auto &Cmd: *CommandQueue)
+	for (std::string &Cmd: *CommandQueue)
 	{
 		if (Cmd == "exit" || Cmd == ";;")
 			exitAmounts++;
@@ -132,9 +133,7 @@ bool Lexer::CheckForExitCommand(std::list <std::string> *CommandQueue)
 }
 
 Lexer::Lexer(){
-
 }
 
 Lexer::~Lexer(){
-
 }

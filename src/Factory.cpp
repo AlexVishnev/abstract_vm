@@ -89,4 +89,4 @@ Factory::Factory()
 	CoreQueue.push_back(&Factory::createFloat);
 	CoreQueue.push_back(&Factory::createDouble);
 }
-Factory::~Factory(){/*	std::cout << "BY BY FROM " << __func__ << std::endl; */}
+Factory::~Factory(){}

@@ -20,7 +20,7 @@ $(NAME): $(OBJ_SRC)
 
 $(OBJ_DIR)/%.o : $(SRC_PATH)%.cpp
 	@/bin/mkdir -p $(OBJ_DIR)
-	@$(CC) -std=c++11 -Wall -Werror -Wextra -I$(INC_PATH) -c -o $@ $<
+	$(CC) -std=c++11 -Wall -Werror -Wextra -I$(INC_PATH) -c -o $@ $<
 
 clean:
 	@/bin/rm -rf $(OBJ_DIR)
