@@ -56,7 +56,7 @@ private:
 	void	_exec();
 	void	DrawLogo();
 	void	FillDefaultCommands();
-	void 	RunLiveMode();
+	void	RunLiveMode();
 	void	DeleteEmptyData(std::list<std::string> &Data);
 };
 
