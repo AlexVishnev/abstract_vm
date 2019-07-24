@@ -1,13 +1,12 @@
 #include "Lexer.hpp"
 
 
-void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *commands, std::list<t_cmds> *CmdQueue, bool istream)
+void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, std::list<t_cmds> *CmdQueue, bool istream)
 {
 	std::array<std::regex, 2> reg;
 	std::smatch base_mach;
 	std::smatch piece;
-
-
+	bool HasExit = false;
 	reg[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|dump|exit)((\\s)+)?(;(.+)?)?";
 	reg[1] = "((\\s)+)?(push|assert)((\\s)+)?"
 			 "(int8|int16|int32|float|double)((\\s)+)?"
@@ -17,10 +16,15 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *commands, st
 			 "(;(.+)?)?";
 
 	this->istream = istream;
-	if (!CheckForExitCommand(commands) && !istream)
-		throw LexerException(RED"Lexer error:\033[0m no exit command");
 
-	for (std::string &Command : *commands)
+	HasExit = CheckForExitCommand(Commands);
+	if (istream)
+		HasExit = true;
+
+	// for (auto &var: *Commands ){
+	// 	std::cout << "commands: " << var << std::endl;
+	// }
+	for (std::string &Command : *Commands)
 	{
 		std::cout << "commands == [" <<  Command << "]"<< std::endl; 
 		for (size_t i = 0; i < reg.size(); ++i)
@@ -32,19 +36,24 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *commands, st
 					std::string piece = sub_match.str();
 				}
 				if (!i && !Command.empty()){
+					// if (HasExit)
 					CreateNewCommand(CmdQueue, "one_pararmetr", Command);
 					Command.clear();
 				}
 				else if (i && !Command.empty()){
+					// if (HasExit)
 					CreateNewCommand(CmdQueue, "several_params", Command);
 					Command.clear();
 				}
 			}
 		}
+		AnalyseCommandQueue(Commands, parser.GetFilePath());
 
+	if (!HasExit)
+		throw LexerException(RED"Lexer error:\033[0m no exit command");
 	}
 
-	AnalyseCommandQueue(commands, parser.GetFilePath());
+
 }
 
 enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
@@ -87,8 +96,7 @@ void Lexer::CreateNewCommand(std::list<t_cmds> *CmdQueue,
 		return ;
 	t_cmds cmd;
 
-	if (condition == "several_params")
-	{
+	if (condition == "several_params") {
 		std::string tmp = c_type.find("push") == std::string::npos ? "assert" : "push";
 		cmd.type = TransformValueToCmdtype(tmp);
 		cmd.oper_type = TransformValueToOtype(c_type);
@@ -97,8 +105,7 @@ void Lexer::CreateNewCommand(std::list<t_cmds> *CmdQueue,
 		cmd.strValue.pop_back();
 		CmdQueue->push_back(cmd);
 	}
-	else
-	{
+	else {
 		cmd.type = TransformValueToCmdtype(c_type);
 		cmd.strValue = "0";
 		cmd.oper_type = End;
@@ -110,6 +117,8 @@ void Lexer::CreateNewCommand(std::list<t_cmds> *CmdQueue,
 void Lexer::AnalyseCommandQueue(std::list <std::string> *CommandsQueue, std::string FilePath)
 {
 	int16_t line = 1;
+	if (CommandsQueue == nullptr)
+		throw NullPointerException("CommandQueue in AnalyseCommandQueue()");
 
 	for (std::string &Command: *CommandsQueue)
 	{
@@ -131,6 +140,8 @@ void Lexer::AnalyseCommandQueue(std::list <std::string> *CommandsQueue, std::str
 bool Lexer::CheckForExitCommand(std::list <std::string> *CommandQueue)
 {
 	int exitAmounts = 0; 
+	if (CommandQueue == nullptr)
+		throw NullPointerException("CommandQueue");
 
 	for (std::string &Cmd: *CommandQueue)
 	{
@@ -138,11 +149,8 @@ bool Lexer::CheckForExitCommand(std::list <std::string> *CommandQueue)
 			exitAmounts++;
 	}
 
-	return exitAmounts == 1;
+	return exitAmounts > 0;
 }
 
-Lexer::Lexer(){
-}
-
-Lexer::~Lexer(){
-}
+Lexer::Lexer(){}
+Lexer::~Lexer(){}

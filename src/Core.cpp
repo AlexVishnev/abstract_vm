@@ -1,31 +1,46 @@
 #include "Core.hpp"
 #include "Exceptions.hpp"
 
+void Core::DeleteEmptyData(std::list<std::string> &Data)
+{
+	// std::list<std::string>::iterator it = Data.begin();
+	
+	// Data.unique();
+	Data.erase(std::remove_if(Data.begin(), Data.end(), [](std::string elem){
+		return elem.empty();
+	}), Data.end());
+}
+
+void	Core::RunLiveMode()
+{
+	std::string buffer;
+
+	while (std::getline(std::cin, buffer))
+	{
+		// parser.GetCommandsList()->unique();
+		DeleteEmptyData(*parser.GetCommandsList());
+
+		if (buffer == ";;" || buffer == "q" || buffer == "quit" || buffer == "exit")
+			break ;
+		parser.GetCommandsList()->push_back(buffer);
+
+		try {
+			lexer.StartTokenizing(parser, parser.GetCommandsList(), &CommandQueue, true);
+		}
+		catch (LexerException &e) {
+			std::cerr << e.what() << std::endl;
+		}
+		_exec();
+	}
+
+}
 
 void	Core::__initd(const int mode, const char **cmd)
 {
 	parser._read(mode, cmd);
 
-	if (!parser.is_filestream(mode)){
-		std::string buffer;
-		while (std::getline(std::cin, buffer))
-		{
-			parser.GetCommandsList()->push_back(buffer);
-
-				try {
-					lexer.StartTokenizing(parser, parser.GetCommandsList(), &CommandQueue, true);
-				}
-				catch (LexerException &e) {
-					std::cerr << e.what() << std::endl;
-				}
-			_exec();
-			
-			for (std::string tmp : *parser.GetCommandsList())
-				std::cout << tmp << std::endl;
-				
-			if (buffer == ";;" || buffer == "exit")
-				break ;
-		}
+	if (!parser.is_filestream(mode)) {
+		RunLiveMode();
 	}
 	 else {
 		try {
@@ -34,10 +49,7 @@ void	Core::__initd(const int mode, const char **cmd)
 		catch(LexerException &e) {
 			std::cerr << e.what() << std::endl;
 		}
-	//Parse file
-	//Lexer analys
-	//start exec Core
-	_exec();
+		_exec();
 	}
 }
 
@@ -107,6 +119,9 @@ void	Core::_exec()
 	catch (LexerException &e){
 		PRINT_ERROR(e.what());
 	}
+	catch (NullPointerException &e) {
+		PRINT_ERROR(e.what());
+	}
 	//ADD cathcers
 }
 
@@ -117,6 +132,7 @@ void	Core::_exit(){
 void	Core::_clear() {
 	_stack.clear();
 }
+
 void	Core::_pow()
 {
 	_get_elements_from_stack();

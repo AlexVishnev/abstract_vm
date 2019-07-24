@@ -17,7 +17,7 @@ public:
 	Core &operator=(const Core &ref);
 	Core(Core const &ref);
 	
-	friend class Parser;
+	// friend class Parser;
 
 	void	_push(t_cmds comadnds);
 	void	_assert(t_cmds comadnds);
@@ -35,6 +35,8 @@ public:
 	void	_exit();
 	void	__initd(const int mode, const char **cmd);
 
+	void	_equal();
+
 protected:
 	Factory			factory;
 	Parser			parser;
@@ -51,10 +53,11 @@ private:
 	IOperand const	*second;
 	IOperand const	*rezult;
 	
-	void			_exec();
-	void			DrawLogo();
-	void			FillDefaultCommands();
-
+	void	_exec();
+	void	DrawLogo();
+	void	FillDefaultCommands();
+	void 	RunLiveMode();
+	void	DeleteEmptyData(std::list<std::string> &Data);
 };
 
 

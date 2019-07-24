@@ -1,23 +1,22 @@
 #include "Parser.hpp"
 
-bool Parser::is_filestream(const int mode)
-{
+bool Parser::is_filestream(const int mode) {
 	return (mode == 2);
 }
 
-std::list <std::string> *Parser::GetCommandsList()
-{
+std::list <std::string> *Parser::GetCommandsList() {
 	return (&this->Commands);
 }
+
 void Parser::_read(const int mode, const char **cfg_file)
 {
 	if (is_filestream(mode))
 		FilePath = cfg_file[1];
 	else {
 		FilePath = "UserInput";
-		PRINT_WARNING("INFO:  Using standart input for declaring commands\n\
-	  Write comands separated by 'Enter' for adding them into command quene \n\
-	  Type 'Ctrl + D || ;; || exit for execution commands\n");
+		PRINT_WARNING("INFO: Run in Live mode\n"\
+					"      Write comands separated by 'Enter' for adding them into command quene \n"\
+					"      Type 'Ctrl + D || ';;' || 'quit' || 'q' for exit\n");
 	}
 	
 
@@ -25,22 +24,13 @@ void Parser::_read(const int mode, const char **cfg_file)
 	std::string buffer;
 
 	if (file.is_open() && !file.eof()) {
-
-		// PRINT_GREEN(FilePath);
 		while (std::getline(file, buffer))
 			Commands.push_back(buffer);
 
 		file.close();
 	}
-	else {
-		// while (std::getline(std::cin, buffer))
-		// {
-		// 	Commands.push_back(buffer);
-		// 	if (buffer == ";;" || buffer == "exit")
-		// 		break ;
-		// }
+	else
 		return ;
-	}
 
 }
 
@@ -53,13 +43,10 @@ Parser &Parser::operator=(Parser const &ref)
 	return *this;
 }
 
-std::string &Parser::GetFilePath()
-{
+std::string &Parser::GetFilePath() {
 	return this->FilePath;
 }
-Parser::Parser(){
 
-}
+Parser::Parser(){ }
 
-Parser::~Parser(){
-}
+Parser::~Parser(){ }

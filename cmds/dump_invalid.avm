@@ -10,7 +10,7 @@ assert int8(10)
 
 push int32(90000)
 
-exit
+;exit
 push int32(102)
 
 push int32(102)

@@ -64,10 +64,25 @@ public:
 
 	virtual const char *what() const throw() override;
 
-	virtual ~LexerException(); //{}
+	virtual ~LexerException();
 
 private:
 	std::string	msg;
+};
+
+class NullPointerException: public std::exception 
+{
+
+public:
+	explicit NullPointerException(const std::string &message);
+
+	virtual const char *what() const throw() override;
+
+	virtual ~NullPointerException();
+
+private:
+	std::string	msg;
+
 };
 
 #endif
