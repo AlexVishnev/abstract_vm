@@ -231,11 +231,11 @@ void	Core::_div()
 void	Core::_print()
 {
 	if (_stack.empty())
-		throw EmptyStackException(RED"Error:\033[0m There is nothing ot print\n");
+		throw EmptyStackException(RED"Print Error:\033[0m There is nothing ot print\n");
 	const IOperand *v1 = _stack.back();
 
 	if (v1->getType() != Int8)
-		throw EmptyStackException(RED"Error:\033[0m tying to print non char variable");
+		throw EmptyStackException(RED"Print Error:\033[0m trying to print non char variable");
 
 	std::cout << static_cast<char>(std::stoi(v1->toString())) << std::endl;
 }

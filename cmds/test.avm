@@ -1,0 +1,10 @@
+push int16(102) ;adsasd
+push int16(102) ;adsasd
+
+add
+
+dump
+
+print
+
+exit
