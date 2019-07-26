@@ -1,9 +1,9 @@
 ; -------------
 ; exemple.avm -
-; -------------
-
+; --------asd-----
+das
 push int16(102)
-
+ddas
 push int8(10)
 
 assert int8(10)

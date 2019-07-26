@@ -33,22 +33,20 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 					std::string piece = sub_match.str();
 				}
 				if (!i && !Command.empty()){
-					// if (HasExit)
 					CreateNewCommand(CmdQueue, "one_pararmetr", Command);
 					Command.clear();
 				}
 				else if (i && !Command.empty()){
-					// if (HasExit)
 					CreateNewCommand(CmdQueue, "several_params", Command);
 					Command.clear();
 				}
 			}
 		}
 
+	AnalyseCommandQueue(Commands, parser.GetFilePath());
 	if (!HasExit)
 		throw LexerException(RED"lexer error:\033[0m no exit command");
 	}
-	AnalyseCommandQueue(Commands, parser.GetFilePath());
 }
 
 enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)

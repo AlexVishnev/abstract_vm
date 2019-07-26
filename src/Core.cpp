@@ -3,9 +3,6 @@
 
 void Core::DeleteEmptyData(std::list<std::string> &Data)
 {
-	// std::list<std::string>::iterator it = Data.begin();
-	
-	// Data.unique();
 	Data.erase(std::remove_if(Data.begin(), Data.end(), [](std::string elem){
 		return elem.empty();
 	}), Data.end());
@@ -17,7 +14,6 @@ void	Core::RunLiveMode()
 
 	while (std::getline(std::cin, buffer))
 	{
-		// parser.GetCommandsList()->unique();
 		DeleteEmptyData(*parser.GetCommandsList());
 
 		if (buffer == ";;" || buffer == "q" || buffer == "quit" || buffer == "exit")
@@ -30,6 +26,9 @@ void	Core::RunLiveMode()
 		catch (LexerException &e) {
 			std::cerr << e.what() << std::endl;
 		}
+		CommandQueue.erase(CommandQueue.begin() , --CommandQueue.end());
+		//think how to inplemet call exec fgor once
+		//trouble because _stack and command queue not synchronized
 		_exec();
 	}
 
@@ -122,10 +121,11 @@ void	Core::_exec()
 	catch (NullPointerException &e) {
 		PRINT_ERROR(e.what());
 	}
-	//ADD cathcers
+	CommandQueue.clear();
+	
 }
 
-void	Core::_exit(){
+void	Core::_exit(){ 
 	exit(0);
 }
 
