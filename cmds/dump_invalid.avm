@@ -3,7 +3,7 @@
 ; --------asd-----
 das
 push int16(102)
-ddas
+ddasi
 push int8(10)
 
 assert int8(10)

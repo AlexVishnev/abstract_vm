@@ -1,6 +1,31 @@
 #include "Core.hpp"
 #include "Exceptions.hpp"
 
+std::string getType(eOperandType type)
+{
+	switch (type)
+	{
+		case Int8:
+			return "int8";
+			break;
+		case Int16:
+			return "int16";
+			break;
+		case Int32:
+			return "int32";
+			break;
+		case Float:
+			return "float";
+			break;
+		case Double:
+			return "double";
+			break;
+		default:
+			return "";
+			break;
+	}
+
+}
 void Core::DeleteEmptyData(std::list<std::string> &Data)
 {
 	Data.erase(std::remove_if(Data.begin(), Data.end(), [](std::string elem){
@@ -27,8 +52,6 @@ void	Core::RunLiveMode()
 			std::cerr << e.what() << std::endl;
 		}
 		CommandQueue.erase(CommandQueue.begin() , --CommandQueue.end());
-		//think how to inplemet call exec fgor once
-		//trouble because _stack and command queue not synchronized
 		_exec();
 	}
 
@@ -45,7 +68,7 @@ void	Core::__initd(const int mode, const char **cmd)
 		try {
 			lexer.StartTokenizing(parser, parser.GetCommandsList(), &CommandQueue, false);
 		}
-		catch(LexerException &e) {
+		catch (LexerException &e) {
 			std::cerr << e.what() << std::endl;
 		}
 		_exec();
@@ -115,10 +138,16 @@ void	Core::_exec()
 	catch (DivByZeroException &e) {
 		PRINT_ERROR(e.what());
 	}
-	catch (LexerException &e){
+	catch (LexerException &e) {
 		PRINT_ERROR(e.what());
 	}
 	catch (NullPointerException &e) {
+		PRINT_ERROR(e.what());
+	}
+	catch (BadLimitException &e) {
+		PRINT_ERROR(e.what());
+	}
+	catch (std::exception &e) {
 		PRINT_ERROR(e.what());
 	}
 	CommandQueue.clear();
@@ -198,6 +227,9 @@ void	Core::_assert(t_cmds cmd)
 
 	const IOperand *v2 = Factory().createOperand(cmd.oper_type, cmd.strValue);
 
+	if (v2 == nullptr)
+		throw BadLimitException(cmd.strValue, getType(cmd.oper_type));
+
 	if (v1->getType() != v2->getType()) {
 		delete v1;
 		delete v2;
@@ -256,7 +288,7 @@ void	Core::_sub()
 void	Core::_pop()
 {
 	if (_stack.empty())
-		throw EmptyStackException(RED"Runtime error:\033[0m Trying to POP with empty stack");
+		throw EmptyStackException(YELLOW"Warning:\033[0m Trying to POP with empty stack");
 	else
 		_stack.pop_back();
 
@@ -265,7 +297,10 @@ void	Core::_pop()
 
 void	Core::_push(t_cmds	cmd)
 {
-	_stack.push_back(Factory().createOperand(cmd.oper_type, cmd.strValue));
+	const IOperand *Operand = Factory().createOperand(cmd.oper_type, cmd.strValue);
+	if (Operand == nullptr)
+		throw BadLimitException(cmd.strValue, getType(cmd.oper_type));
+	_stack.push_back(Operand);
 }
 
 
@@ -273,7 +308,7 @@ void Core::_dump()
 {
 
 	if (_stack.empty())
-		throw EmptyStackException(RED"Runtime error:\033[0m there is nothing to dump\n"); //change to yellow clr
+		throw EmptyStackException(YELLOW"Warning:\033[0m there is nothing to dump\n"); //change to yellow clr
 
 	for (auto i = _stack.end(); i != _stack.begin(); )
 	{

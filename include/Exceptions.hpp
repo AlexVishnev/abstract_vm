@@ -18,6 +18,18 @@ private:
 	std::string msg;
 };
 
+class BadLimitException : public std::out_of_range
+{
+public:
+	explicit BadLimitException(const std::string &message, std::string type);
+
+	virtual	const char *what() const throw() override;
+	virtual ~BadLimitException();
+private:
+
+	std::string msg;
+};
+
 
 class	OverflowException : public std::out_of_range
 {

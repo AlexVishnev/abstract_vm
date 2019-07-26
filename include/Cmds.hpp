@@ -25,7 +25,6 @@ typedef struct s_cmds
 	cmd_type type;
 	eOperandType oper_type;
 	std::string strValue;
-	long double value;
 
 } t_cmds;
 
