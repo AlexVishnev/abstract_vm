@@ -1,6 +1,6 @@
 push int8(1102)
 
 push int8(11)
-add
+addpush
 
 exit

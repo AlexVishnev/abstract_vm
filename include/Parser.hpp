@@ -18,7 +18,7 @@ public:
 	
 	std::string  &GetFilePath();
 	void			_read(const int mode, const char **cfg_file);
-	bool			is_filestream(const int mode);
+	bool			isFilestream(const int mode);
 	std::list <std::string> *GetCommandsList();
 
 private:

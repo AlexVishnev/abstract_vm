@@ -14,10 +14,8 @@ class Core
 public:
 	Core ();
 	~Core();
-	
 	void	__initd(const int mode, const char **cmd);
 
-	
 protected:
 	Factory			factory;
 	Parser			parser;
@@ -51,13 +49,12 @@ private:
 	IOperand const	*first;
 	IOperand const	*second;
 	IOperand const	*rezult;
-	
 
 	void	DrawLogo();
 	void	FillDefaultCommands();
 	void	RunLiveMode();
 	void	DeleteEmptyData(std::list<std::string> &Data);
-
+	void	Usage();
 	Core(Core const &ref);
 	Core &operator=(const Core &ref);
 

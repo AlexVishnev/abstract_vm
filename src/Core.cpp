@@ -44,6 +44,18 @@ void Core::DeleteEmptyData(std::list<std::string> &Data)
 	}), Data.end());
 }
 
+void	Core::Usage()
+{
+	PRINT_WARNING("Description\n"\
+	"  Commands:\n\t- pop: Unstacks the value from the top of the stack\n"\
+	"\t- dump: Displays each value of the stack, from the most recent one to the oldest one \n"\
+	"\t- add: Unstacks the first two values on the stack, adds them together and stacks the result.\n"\
+	"\t- div: Unstacks the first two values on the stack, subtracts them, then stacks the result.\n" \
+	"\t- mul: Unstacks the first two values on the stack, multiplies them, then stacks the result. \n "\
+	);
+	PRINT_ERROR("Abstract VM by avishnev [version 1.9]");
+}
+
 void	Core::RunLiveMode()
 {
 	std::string buffer;
@@ -54,7 +66,10 @@ void	Core::RunLiveMode()
 
 		if (buffer == ";;" || buffer == "q" || buffer == "quit" || buffer == "exit")
 			break ;
-		parser.GetCommandsList()->push_back(buffer);
+		if (buffer == "-h" || buffer == "--help")
+			Usage();
+		else
+			parser.GetCommandsList()->push_back(buffer);
 
 		try {
 			lexer.StartTokenizing(parser, parser.GetCommandsList(), &CommandQueue, true);
@@ -72,7 +87,7 @@ void	Core::__initd(const int mode, const char **cmd)
 {
 	parser._read(mode, cmd);
 
-	if (!parser.is_filestream(mode)) {
+	if (!parser.isFilestream(mode)) {
 		RunLiveMode();
 	}
 	 else {
