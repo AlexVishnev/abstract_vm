@@ -17,6 +17,7 @@ enum cmd_type
 	Exit,
 	Push,
 	Assert,
+	Size,
 	endlist,
 };
 

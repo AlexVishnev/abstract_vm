@@ -33,6 +33,7 @@ public:
 	void	_print();
 	void	_clear();
 	void	_exit();
+	void	_printStackSize();
 	void	__initd(const int mode, const char **cmd);
 
 	void	_equal();

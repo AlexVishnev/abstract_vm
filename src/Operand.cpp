@@ -25,22 +25,22 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 	if (_operator == '+') {
 		if (first > 0 && second > 0) {
 			if ((first + second) < second)
-				throw UnderflowException(RED"Calculation error: \033[0m Underflow after '+' operation"); 
+				throw UnderflowException("Calculation error: ", "+"); 
 		}
 		else if (first < 0 && second < 0) {
 			if (first < 0 && (first + second) > second)
-				throw OverflowException(RED"Calculation error: \033[0m Overflow after '+' operation");
+				throw OverflowException("Calculation error: ", "+");
 			else if ((first + second) < second)
-				throw UnderflowException(RED"Calculation error: \033[0m Underflow after '+' operation");
+				throw UnderflowException("Calculation error: ", "+");
 		}
 	}
 	else if (_operator == '*')
 	{
 		if (std::abs(first) > std::numeric_limits<T>::max() / std::abs(second)) {
 			if ((first > 0 && second > 0) || (first < 0 && second < 0))
-				throw OverflowException(RED"Calculation error: \033[0m Overflow after '*' operation ");
+				throw OverflowException("Calculation error: ", "*");
 			else
-				throw UnderflowException(RED"Calculation error: \033[0m Underflow after '*' operation ");
+				throw UnderflowException("Calculation error: ", "*");
 			
 		}
 	}
@@ -49,12 +49,12 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 		if (first > 0 && second < 0){
 			if ((std::numeric_limits<T>::max() / 2 < std::abs(first)) 
 				&& (std::numeric_limits<T>::max() / 2 < std::abs(first)))
-				throw OverflowException(RED"Calculation error: \033[0m Overflow after '-' operation ");
+				throw OverflowException("Calculation error: ", "-");
 		}
 		else if (first < 0 && second > 0){
 			if ((std::numeric_limits<T>::max() / 2 < std::abs(first)) 
 				&& (std::numeric_limits<T>::max() / 2 < std::abs(first)))
-				throw UnderflowException(RED"Calculation error: \033[0m Underflow after '-' operation ");
+				throw UnderflowException("Calculation error: ", "-");
 		}
 	}
 	else if (_operator == '/') {
@@ -67,7 +67,7 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 	}
 	else if (_operator == '^') {
 		if (second > 32)
-			throw OverflowException(RED"Calculation error:\033[0m Overflow 'pow' operation ");
+			throw OverflowException("Calculation error: ", "pow");
 	}
 }
 

@@ -26,6 +26,17 @@ std::string getType(eOperandType type)
 	}
 
 }
+
+void Core::_printStackSize()
+{
+	try {
+		std::string color = _stack.size() == 0 ? RED : GREEN;
+		std::cout << YELLOW "stack_size: " NO_COLOR + color << _stack.size() << NO_COLOR << std::endl;
+	}
+	catch (const std::exception &e) {
+		PRINT_ERROR(e.what());
+	}
+}
 void Core::DeleteEmptyData(std::list<std::string> &Data)
 {
 	Data.erase(std::remove_if(Data.begin(), Data.end(), [](std::string elem){
@@ -121,6 +132,9 @@ void	Core::_exec()
 						break;
 				case Exit:
 						_exit();
+				case Size:
+						_printStackSize();
+						break;
 				default:
 						std::cout << "CHAGE THIS MESSAGE" << std::endl;
 			}
@@ -154,7 +168,7 @@ void	Core::_exec()
 	
 }
 
-void	Core::_exit(){ 
+void	Core::_exit() { 
 	exit(0);
 }
 
@@ -166,9 +180,13 @@ void	Core::_pow()
 {
 	_get_elements_from_stack();
 	if (first != nullptr && second != nullptr) {
-//try
 		rezult = *first ^ *second;
-//catch
+	
+		if (rezult == nullptr) {
+			delete first;
+			delete second;
+			throw OverflowException("Calculation Error: ", "^");
+		}
 		_stack.push_back(rezult);
 		delete first;
 		delete second;
@@ -182,6 +200,11 @@ void	Core::_mod()
 	if (first != nullptr && second != nullptr) {
 
 		rezult = *first % *second;
+		if (rezult == nullptr) {
+			throw NullPointerException(RED "Calculation error: can`t modulo" NO_COLOR);
+			delete first;
+			delete second;
+		}
 		_stack.push_back(rezult);
 
 		delete first;
@@ -196,6 +219,12 @@ void	Core::_add()
 	if (first != nullptr && second != nullptr) {
 
 		rezult = *first + *second;
+		if (rezult == nullptr){
+			delete first;
+			delete second;
+
+			throw OverflowException("Calculation Error: ", "+");
+		}
 		_stack.push_back(rezult);
 
 		delete first;
@@ -211,6 +240,13 @@ void	Core::_mul()
 	if (first != nullptr && second != nullptr) {
 
 		rezult = *first * *second;
+		if (rezult == nullptr){
+			delete first;
+			delete second;
+
+			throw OverflowException("Calculation Error: ", "*");
+		}
+
 		_stack.push_back(rezult);
 
 		delete first;
@@ -233,14 +269,14 @@ void	Core::_assert(t_cmds cmd)
 	if (v1->getType() != v2->getType()) {
 		delete v1;
 		delete v2;
-		throw EmptyStackException(RED"Asserting error:\033[0m asserting types not equal");
+		throw EmptyStackException(RED"Asserting error:\033[0m types not equal");
 	}
 
 	if (std::stod(v1->toString()) != std::stod(v2->toString())) {
-		PRINT_WARNING("ASSERT FALSE");
+		PRINT_WARNING(YELLOW "AVM (#_assert): " NO_COLOR RED "FALSE");
 	}
 	else
-		PRINT_GREEN("ASSERT TRUE");
+		PRINT_GREEN(YELLOW "AVM (#_assert): " NO_COLOR GREEN "TRUE");
 
 	delete v2;
 }
@@ -253,6 +289,11 @@ void	Core::_div()
 	if (first != nullptr && second != nullptr) {
 
 		rezult = *first / *second;
+		if (rezult == nullptr){
+			delete first;
+			delete second;
+			throw NullPointerException(RED "Calculation error: can`t divide" NO_COLOR);
+		}
 		_stack.push_back(rezult);
 
 		delete first;
@@ -263,13 +304,13 @@ void	Core::_div()
 void	Core::_print()
 {
 	if (_stack.empty())
-		throw EmptyStackException(RED"Print Error:\033[0m There is nothing ot print\n");
+		throw EmptyStackException(RED"Print Error:\033[0m There is nothing to print\n");
 	const IOperand *v1 = _stack.back();
 
 	if (v1->getType() != Int8)
 		throw EmptyStackException(RED"Print Error:\033[0m trying to print non char variable");
 
-	std::cout << static_cast<char>(std::stoi(v1->toString())) << std::endl;
+	std::cout << YELLOW "AVM (#_print):" NO_COLOR << static_cast<char>(std::stoi(v1->toString())) << std::endl;
 }
 
 void	Core::_sub()
@@ -279,6 +320,13 @@ void	Core::_sub()
 	if (first != nullptr && second != nullptr) {
 
 		rezult = *first - *second;
+		if (rezult == nullptr){
+			delete first;
+			delete second;
+
+			throw UnderflowException("Calculation Error: ", "-");
+		}
+
 		_stack.push_back(rezult);
 
 		delete first;
@@ -306,15 +354,18 @@ void	Core::_push(t_cmds	cmd)
 
 void Core::_dump()
 {
-
 	if (_stack.empty())
-		throw EmptyStackException(YELLOW"Warning:\033[0m there is nothing to dump\n"); //change to yellow clr
+		throw EmptyStackException(YELLOW"Warning:\033[0m there is nothing to dump\n");
+
+	int16_t counter = _stack.size();
+	std::cout << std::endl;
 
 	for (auto i = _stack.end(); i != _stack.begin(); )
 	{
 		--i;
 		if (*i != nullptr && !(*i)->toString().empty())
-		PRINT_GREEN((*i)->toString());
+			std::cout << YELLOW "AVM (#_dump): " NO_COLOR RED "stack[" << --counter << "] " NO_COLOR << (*i)->toString() << std::endl;
+
 	}
 }
 
@@ -379,7 +430,7 @@ void Core::DrawLogo()
 
 	for (std::string line : logo)
 	{
-		PRINT_GREEN(line);
+		PRINT_ERROR(line);
 		usleep(65000);
 	}
 	logo.clear();

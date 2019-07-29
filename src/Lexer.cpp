@@ -7,7 +7,7 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 	std::smatch base_mach;
 	std::smatch piece;
 	bool HasExit = false;
-	reg[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|dump|exit)((\\s)+)?(;(.+)?)?";
+	reg[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|dump|exit|size)((\\s)+)?(;(.+)?)?";
 	reg[1] = "((\\s)+)?(push|assert)((\\s)+)?"
 			 "(int8|int16|int32|float|double)((\\s)+)?"
 			 "\\(((\\s)+)?"
@@ -23,7 +23,6 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 
 	for (std::string &Command : *Commands)
 	{
-		std::cout << "commands == [" <<  Command << "]"<< std::endl; 
 		for (size_t i = 0; i < reg.size(); ++i)
 		{
 			if (std::regex_match(Command, piece, std::regex(reg[i]))) {
@@ -56,7 +55,8 @@ enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 	std::string DefValues[] = {"pop", "dump", "print",
 							   "add", "sub", "mul",
 							   "div", "mod", "pow",
-							   "clear", "exit", "push", "assert"};
+							   "clear", "exit", "push", 
+							   "assert", "size"};
 
 
 	for (size_t i = 0; i < sizeof(DefValues) / sizeof(DefValues[0]); i++)
@@ -64,7 +64,7 @@ enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 		if (ValueType == DefValues[i])
 			return static_cast<cmd_type>(i);
 	}
-	return static_cast<cmd_type>(13);
+	return static_cast<cmd_type>(14);
 }
 
 enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)

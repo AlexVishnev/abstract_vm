@@ -34,7 +34,7 @@ private:
 class	OverflowException : public std::out_of_range
 {
 public:
-	explicit OverflowException(const std::string &message);
+	explicit OverflowException(const std::string &message, std::string oper);
 
 	virtual const char *what() const throw() override;
 	virtual ~OverflowException();
@@ -46,7 +46,7 @@ private:
 class	UnderflowException : public std::out_of_range 
 {
 public:
-	explicit UnderflowException(const std::string &message);
+	explicit UnderflowException(const std::string &message, std::string oper);
 
 	virtual const char *what() const throw() override;
 	virtual ~UnderflowException();
@@ -91,6 +91,21 @@ public:
 	virtual const char *what() const throw() override;
 
 	virtual ~NullPointerException();
+
+private:
+	std::string	msg;
+
+};
+
+class CustomException: public std::exception 
+{
+
+public:
+	explicit CustomException(const std::string &message);
+
+	virtual const char *what() const throw() override;
+
+	virtual ~CustomException();
 
 private:
 	std::string	msg;
