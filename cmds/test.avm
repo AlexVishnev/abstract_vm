@@ -15963,7 +15963,7 @@ push int16(102) ;adsasd
 push int16(102) ;adsasd
 
 push int16(102) ;adsasd
-vush int16(102) ;adsasd
+push int16(102) ;adsasd
 
 push int16(102) ;adsasd
 
@@ -52869,4 +52869,5 @@ div
 
 dump
 
+size
 exit
