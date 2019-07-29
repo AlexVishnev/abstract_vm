@@ -10,7 +10,7 @@ IOperand const *Factory::createInt8(std::string const &value) const
 	try
 	{
 		int64_t number = std::stoll(value);
-		if (number < INT8_MIN || number > INT8_MAX)
+		if (number < std::numeric_limits<int8_t>::min() || number > std::numeric_limits<int8_t>::max())
 			return (nullptr);
 		return (new Operand<int8_t>(static_cast<int8_t>(number)));
 	}
@@ -26,7 +26,7 @@ IOperand const *Factory::createInt16(std::string const &value) const
 	try
 	{
 		int64_t number = std::stoll(value);
-		if (number < INT16_MIN || number > INT16_MAX)
+		if (number < std::numeric_limits<int16_t>::min() || number > std::numeric_limits<int16_t>::max())
 			return (nullptr);
 		return (new Operand<int16_t>(static_cast<int16_t>(number)));
 	}
@@ -42,7 +42,7 @@ IOperand const *Factory::createInt32(std::string const &value) const
 	try
 	{
 		int64_t number = std::stoll(value);
-		if (number < INT32_MIN || number > INT32_MAX)
+		if (number < std::numeric_limits<int32_t>::min() || number > std::numeric_limits<int32_t>::max())
 			return (nullptr);
 		return (new Operand<int32_t>(static_cast<int32_t>(number)));
 	}
@@ -57,7 +57,9 @@ IOperand const *Factory::createFloat(std::string const &value) const
 {
 	try
 	{
-		int64_t number = std::stoll(value);
+		float number = std::stof(value);
+		if (number > std::numeric_limits<float>::max())
+			return (nullptr);
 		return (new Operand<float>(static_cast<float>(number)));
 	}
 	catch (const std::bad_cast &e)
@@ -71,7 +73,9 @@ IOperand const *Factory::createDouble(std::string const &value) const
 {
 	try
 	{
-		int64_t number = std::stoll(value);
+		long double number = std::stold(value);
+		if (number > std::numeric_limits<double>::max())
+			return (nullptr);
 		return (new Operand<double>(static_cast<double>(number)));
 	}
 	catch (const std::bad_cast &e)
@@ -96,4 +100,4 @@ Factory::Factory()
 	CoreQueue.push_back(&Factory::createFloat);
 	CoreQueue.push_back(&Factory::createDouble);
 }
-Factory::~Factory() {}
+Factory::~Factory() { }

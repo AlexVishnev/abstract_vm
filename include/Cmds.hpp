@@ -18,6 +18,7 @@ enum cmd_type
 	Push,
 	Assert,
 	Size,
+	Sort,
 	endlist,
 };
 

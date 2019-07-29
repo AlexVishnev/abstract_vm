@@ -14,9 +14,9 @@ void Parser::_read(const int mode, const char **cfg_file)
 		FilePath = cfg_file[1];
 	else {
 		FilePath = "UserInput";
-		PRINT_WARNING("INFO: Run in Live mode\n"\
-					"      Write comands separated by 'Enter' for adding them into command quene \n"\
-					"      Type 'Ctrl + D || ';;' || 'quit' || 'q' for exit\n");
+		PRINT_WARNING("AVM INFO: Run in Live mode\n"\
+					"            Write comands separated by 'Enter' for adding them into command quene \n"\
+					"            Type 'Ctrl + D || ';;' || 'quit' || 'q' for exit\n");
 	}
 	
 

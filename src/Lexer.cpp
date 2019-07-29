@@ -7,7 +7,7 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 	std::smatch base_mach;
 	std::smatch piece;
 	bool HasExit = false;
-	reg[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|dump|exit|size)((\\s)+)?(;(.+)?)?";
+	reg[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|dump|exit|size|sort)((\\s)+)?(;(.+)?)?";
 	reg[1] = "((\\s)+)?(push|assert)((\\s)+)?"
 			 "(int8|int16|int32|float|double)((\\s)+)?"
 			 "\\(((\\s)+)?"
@@ -33,12 +33,12 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 				}
 				if (!i && !Command.empty()){
 					if (HasExit)
-						CreateNewCommand(CmdQueue, "one_pararmetr", Command);
+						CreateNewCommand(CmdQueue, false, Command);
 					Command.clear();
 				}
 				else if (i && !Command.empty()){
 					if (HasExit)
-						CreateNewCommand(CmdQueue, "several_params", Command);
+						CreateNewCommand(CmdQueue, true, Command);
 					Command.clear();
 				}
 			}
@@ -56,7 +56,7 @@ enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 							   "add", "sub", "mul",
 							   "div", "mod", "pow",
 							   "clear", "exit", "push", 
-							   "assert", "size"};
+							   "assert", "size", "sort"};
 
 
 	for (size_t i = 0; i < sizeof(DefValues) / sizeof(DefValues[0]); i++)
@@ -64,7 +64,7 @@ enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 		if (ValueType == DefValues[i])
 			return static_cast<cmd_type>(i);
 	}
-	return static_cast<cmd_type>(14);
+	return static_cast<cmd_type>(15);
 }
 
 enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
@@ -83,14 +83,13 @@ enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
 	return static_cast<eOperandType>(5);
 }
 
-void Lexer::CreateNewCommand(std::list<t_cmds> *CmdQueue,
-						std::string condition, std::string &c_type)
+void Lexer::CreateNewCommand(std::list<t_cmds> *CmdQueue, bool HasTwoParams, std::string &c_type)
 {
-	if (CmdQueue == nullptr || c_type.empty() || condition.empty())
+	if (CmdQueue == nullptr || c_type.empty())
 		return ;
-	t_cmds cmd;
 
-	if (condition == "several_params") {
+	t_cmds cmd;
+	if (HasTwoParams) {
 		std::string tmp = c_type.find("push") == std::string::npos ? "assert" : "push";
 		cmd.type = TransformValueToCmdtype(tmp);
 		cmd.oper_type = TransformValueToOtype(c_type);

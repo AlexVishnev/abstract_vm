@@ -62,8 +62,8 @@ void	Core::RunLiveMode()
 		catch (LexerException &e) {
 			std::cerr << e.what() << std::endl;
 		}
-		CommandQueue.erase(CommandQueue.begin() , --CommandQueue.end());
-		_exec();
+		CommandQueue.erase(CommandQueue.begin(), --CommandQueue.end()); // Need for executetion one last
+		_exec();														// Command given from stdin
 	}
 
 }
@@ -135,6 +135,9 @@ void	Core::_exec()
 				case Size:
 						_printStackSize();
 						break;
+				case Sort:
+						_sortStack();
+						break;
 				default:
 						std::cout << "CHAGE THIS MESSAGE" << std::endl;
 			}
@@ -191,6 +194,15 @@ void	Core::_pow()
 		delete first;
 		delete second;
 	}
+}
+
+void	Core::_sortStack()
+{
+	if (_stack.empty()) {
+		PRINT_WARNING("Stack is empty");
+		return ;
+	}
+	_stack.sort();
 }
 
 void	Core::_mod()
@@ -404,7 +416,8 @@ void Core::FillDefaultCommands()
 {
 	std::string	cmds[] = {  "pop", "dump", "print", "add", 
 							"sub", "mul", "div", "mod" , "pow",
-							"exit", "clear", "push", "assert"
+							"exit", "clear", "push", "assert", 
+							"size", "sort"
 							};
 	for (auto var: cmds)
 		_cmd_default.push_back(var);

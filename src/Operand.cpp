@@ -3,7 +3,6 @@
 
 template <class T>Operand<T>::Operand(T value): _value(value)
 {
-
 	if ((typeid(T) == typeid(int8_t)) || (typeid(T) == typeid(int16_t))
 		|| (typeid(T) == typeid(int32_t)))
 		_buffer = std::to_string(value);
@@ -72,7 +71,6 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 }
 
 template <class T> std::string const &Operand<T>::toString() const {
-
 	return (this->_buffer);
 }
 
@@ -221,7 +219,7 @@ template <class T> Operand<T>::Operand(Operand const &ref)
 }
 
 template <class T> Operand<T>::Operand(){ /*-_-*/}
-template <class T> Operand<T>::~Operand(){/*	std::cout << "BY BY FROM " << __func__ << std::endl; */}
+template <class T> Operand<T>::~Operand(){/*-_-*/}
 
 
 template class Operand<int8_t>;
