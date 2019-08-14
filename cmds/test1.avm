@@ -1,6 +1,17 @@
-push int8(1102)
-
 push int8(11)
-addpush
+push int8(02)
+push int8(-12)
+push int8(121)
 
+
+push int8(-11)
+
+push double(-12.123)
+push double(-12.23)
+push double(-12.2)
+push double(-0)
+push double(0)
+push double(32.23)
+sort
+dump
 exit

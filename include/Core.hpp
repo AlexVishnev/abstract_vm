@@ -23,7 +23,7 @@ protected:
 	
 	std::list <t_cmds>				CommandQueue;
 	std::list <std::string> 		_cmd_default;
-	std::list <IOperand const *>	_stack;
+	std::vector <IOperand const *>	_stack;
 	
 	void	_push(t_cmds comadnds);
 	void	_assert(t_cmds comadnds);

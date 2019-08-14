@@ -46,6 +46,10 @@
         "ratio": "cpp",
         "thread": "cpp",
         "cinttypes": "cpp",
-        "typeindex": "cpp"
+        "typeindex": "cpp",
+        "cstdarg": "cpp",
+        "algorithm": "cpp",
+        "cfenv": "cpp",
+        "regex": "cpp"
     }
 }

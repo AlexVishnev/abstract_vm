@@ -109,52 +109,23 @@ void	Core::_exec()
 		{
 			switch (cmd.type)
 			{
-				case Push:
-						_push(cmd);
-						break;
-				case Pop:
-						_pop();
-						break;
-				case Dump:
-						_dump();
-						break;
-				case Print:
-						_print();
-						break;
-				case Assert:
-						_assert(cmd);
-						break;
-				case Add:
-						_add();
-						break;
-				case Sub:
-						_sub();
-						break;
-				case Mul:
-						_mul();
-						break;
-				case Div:
-						_div();
-						break;
-				case Mod:
-						_mod();
-						break;
-				case Pow:
-						_pow();
-						break;
-				case Clear:
-						_clear();
-						break;
-				case Exit:
-						_exit();
-				case Size:
-						_printStackSize();
-						break;
-				case Sort:
-						_sortStack();
-						break;
+				case Push: _push(cmd); break;
+				case Assert: _assert(cmd); break;
+				case Dump: _dump(); break;
+				case Print: _print(); break;
+				case Clear: _clear(); break;
+				case Pop: _pop(); break;
+				case Add: _add(); break;
+				case Sub: _sub(); break;
+				case Mul: _mul(); break;
+				case Div: _div(); break;
+				case Mod: _mod(); break;
+				case Pow: _pow(); break;
+				case Exit: _exit();
+				case Size: _printStackSize(); break;
+				case Sort: _sortStack(); break;
 				default:
-						std::cout << "CHAGE THIS MESSAGE" << std::endl;
+					std::cout << "CHAGE THIS MESSAGE" << std::endl;
 			}
 		}
 	}
@@ -186,13 +157,8 @@ void	Core::_exec()
 	
 }
 
-void	Core::_exit() { 
-	exit(0);
-}
-
-void	Core::_clear() {
-	_stack.clear();
-}
+void	Core::_exit() { exit(0);}
+void	Core::_clear() { _stack.clear();}
 
 void	Core::_pow()
 {
@@ -217,7 +183,21 @@ void	Core::_sortStack()
 		PRINT_WARNING("Stack is empty");
 		return ;
 	}
-	_stack.sort();
+
+	for (size_t i = 0; i < _stack.size(); i++)
+	{
+		for (size_t j = 0; j < _stack.size(); j++)
+		{
+			if (std::stold((_stack[i])->toString()) > std::stold((_stack[j])->toString())){
+				std::cout << " i[" << i << "]"<< std::stold((_stack[i])->toString()) <<  " "<< " j[" << j << "]" << std::stold((_stack[j])->toString()) << std::endl;
+				const IOperand *tmp = _stack[i];
+				_stack[i] = _stack[j];
+				_stack[j] = tmp;
+				j = 0;
+			}
+		}
+	}
+	_stack.shrink_to_fit();
 }
 
 void	Core::_mod()
@@ -270,7 +250,6 @@ void	Core::_mul()
 		if (rezult == nullptr){
 			delete first;
 			delete second;
-
 			throw OverflowException("Calculation Error: ", "*");
 		}
 
@@ -290,8 +269,10 @@ void	Core::_assert(t_cmds cmd)
 
 	const IOperand *v2 = Factory().createOperand(cmd.oper_type, cmd.strValue);
 
-	if (v2 == nullptr)
+	if (v2 == nullptr) {
 		throw BadLimitException(cmd.strValue, getType(cmd.oper_type));
+		delete v1;
+	}
 
 	if (v1->getType() != v2->getType()) {
 		delete v1;
@@ -424,7 +405,7 @@ void Core::_get_elements_from_stack()
 
 Core::Core() {
 	DrawLogo();
-	FillDefaultCommands();
+	// FillDefaultCommands();
 }
 
 void Core::FillDefaultCommands()
