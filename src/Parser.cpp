@@ -47,4 +47,7 @@ std::string &Parser::GetFilePath() {
 
 Parser::Parser(){ }
 
-Parser::~Parser(){ }
+Parser::~Parser()
+{
+	Commands.clear();
+}

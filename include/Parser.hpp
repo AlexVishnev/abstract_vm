@@ -16,7 +16,7 @@ public:
 	Parser &operator=(const Parser &ref);
 	~Parser();
 	
-	std::string  &GetFilePath();
+	std::string		 &GetFilePath();
 	void			_read(const int mode, const char **cfg_file);
 	bool			isFilestream(const int mode);
 	std::list <std::string> *GetCommandsList();

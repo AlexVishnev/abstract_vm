@@ -51,17 +51,28 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 
 enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 {
-	//type depends on variable position if DefValues[]; 
-	std::string DefValues[] = {"pop", "dump", "print",
-							   "add", "sub", "mul",
-							   "div", "mod", "pow",
-							   "clear", "exit", "push", 
-							   "assert", "size", "sort"};
+	//type depends on variable position if DefValues[];
+
+	std::string DefValues[] = {
+		"pop", "dump", "print",
+		"add", "sub", "mul",
+		"div", "mod", "pow",
+		"clear", "exit", "push", 
+		"assert", "size", "sort"
+	};
+
+	std::pair<std::string, int> expr;
+
+	int i = 0;
+	for (std::string var: DefValues) {
+		std::make_pair(var, ++i);
+	}
 
 
 	for (size_t i = 0; i < sizeof(DefValues) / sizeof(DefValues[0]); i++)
 	{
-		if (ValueType == DefValues[i])
+		if (ValueType == DefValues[i] || ValueType.substr(0, 3) == DefValues[i] ||
+			ValueType.substr(0, 4) == DefValues[i] || ValueType.substr(0, 5) == DefValues[i])
 			return static_cast<cmd_type>(i);
 	}
 	return static_cast<cmd_type>(15);
@@ -72,8 +83,9 @@ enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
 	ValueType.erase(0, ValueType.find("push") == std::string::npos ? 7 : 5);
 	std::string	tmp = ValueType.substr(0, ValueType.find('('));
 
-	std::string DefValues[] = {"int8", "int16", "int32",
-							   "float", "double"};
+	std::string DefValues[] = {
+		"int8", "int16", "int32", "float", "double"
+	};
 
 	for (size_t i = 0; i < sizeof(DefValues) / sizeof(DefValues[0]); i++)
 	{

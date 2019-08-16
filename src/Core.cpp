@@ -5,24 +5,12 @@ std::string getType(eOperandType type)
 {
 	switch (type)
 	{
-		case Int8:
-			return "int8";
-			break;
-		case Int16:
-			return "int16";
-			break;
-		case Int32:
-			return "int32";
-			break;
-		case Float:
-			return "float";
-			break;
-		case Double:
-			return "double";
-			break;
-		default:
-			return "";
-			break;
+		case Int8: return "int8";
+		case Int16: return "int16";
+		case Int32: return "int32";
+		case Float: return "float";
+		case Double: return "double";
+		default: return "";
 	}
 
 }
@@ -80,6 +68,8 @@ void	Core::RunLiveMode()
 		CommandQueue.erase(CommandQueue.begin(), --CommandQueue.end()); // Need for executetion one last
 		_exec();														// Command given from stdin
 	}
+	parser.GetCommandsList()->clear();
+	_stack.clear();
 
 }
 
@@ -128,6 +118,30 @@ void	Core::_exec()
 					std::cout << "CHAGE THIS MESSAGE" << std::endl;
 			}
 		}
+/*
+		for (auto cmd: CmdQueue) {
+			switch (std::get<0>(cmd))
+			{
+				// case Push: _push(cmd); break;
+				// case Assert: _assert(cmd); break;
+				case Dump: _dump(); break;
+				case Print: _print(); break;
+				case Clear: _clear(); break;
+				case Pop: _pop(); break;
+				case Add: _add(); break;
+				case Sub: _sub(); break;
+				case Mul: _mul(); break;
+				case Div: _div(); break;
+				case Mod: _mod(); break;
+				case Pow: _pow(); break;
+				case Exit: _exit();
+				case Size: _printStackSize(); break;
+				case Sort: _sortStack(); break;
+				default:
+					std::cout << "CHAGE THIS MESSAGE" << std::endl;
+			}
+		}
+		*/
 	}
 	catch (EmptyStackException &e) {
 		PRINT_ERROR(e.what());
@@ -157,7 +171,13 @@ void	Core::_exec()
 	
 }
 
-void	Core::_exit() { exit(0);}
+void	Core::_exit()
+{ 
+	if (_stack.size() != 0)
+		_stack.clear();
+	exit(0);
+}
+
 void	Core::_clear() { _stack.clear();}
 
 void	Core::_pow()
@@ -189,7 +209,6 @@ void	Core::_sortStack()
 		for (size_t j = 0; j < _stack.size(); j++)
 		{
 			if (std::stold((_stack[i])->toString()) > std::stold((_stack[j])->toString())){
-				std::cout << " i[" << i << "]"<< std::stold((_stack[i])->toString()) <<  " "<< " j[" << j << "]" << std::stold((_stack[j])->toString()) << std::endl;
 				const IOperand *tmp = _stack[i];
 				_stack[i] = _stack[j];
 				_stack[j] = tmp;
@@ -275,7 +294,6 @@ void	Core::_assert(t_cmds cmd)
 	}
 
 	if (v1->getType() != v2->getType()) {
-		delete v1;
 		delete v2;
 		throw EmptyStackException(RED"Asserting error:\033[0m types not equal");
 	}
@@ -328,7 +346,7 @@ void	Core::_sub()
 	if (first != nullptr && second != nullptr) {
 
 		rezult = *first - *second;
-		if (rezult == nullptr){
+		if (rezult == nullptr) {
 			delete first;
 			delete second;
 
@@ -347,13 +365,13 @@ void	Core::_pop()
 		throw EmptyStackException(YELLOW"Warning:\033[0m Trying to POP with empty stack");
 	else
 		_stack.pop_back();
-
-
 }
 
 void	Core::_push(t_cmds	cmd)
 {
-	const IOperand *Operand = Factory().createOperand(cmd.oper_type, cmd.strValue);
+	auto lol = std::make_tuple(cmd.oper_type, cmd.strValue);
+	
+	const IOperand *Operand = Factory().createOperand(std::get<0>(lol), std::get<1>(lol));
 	if (Operand == nullptr)
 		throw BadLimitException(cmd.strValue, getType(cmd.oper_type));
 	_stack.push_back(Operand);
@@ -372,7 +390,8 @@ void Core::_dump()
 	{
 		--i;
 		if (*i != nullptr && !(*i)->toString().empty())
-			std::cout << YELLOW "AVM (#_dump): " NO_COLOR RED "stack[" << --counter << "] " NO_COLOR << (*i)->toString() << std::endl;
+			std::cout << YELLOW "AVM (#_dump): " NO_COLOR RED "stack[" << --counter 
+			<< "] " NO_COLOR << (*i)->toString() << std::endl;
 
 	}
 }
@@ -403,20 +422,12 @@ void Core::_get_elements_from_stack()
 	_stack.pop_back();
 }
 
-Core::Core() {
-	DrawLogo();
-	// FillDefaultCommands();
-}
-
-void Core::FillDefaultCommands()
+Core::Core() 
 {
-	std::string	cmds[] = {  "pop", "dump", "print", "add", 
-							"sub", "mul", "div", "mod" , "pow",
-							"exit", "clear", "push", "assert", 
-							"size", "sort"
-							};
-	for (auto var: cmds)
-		_cmd_default.push_back(var);
+	first = nullptr;
+	second = nullptr;
+	rezult = nullptr;
+	DrawLogo();
 
 }
 
@@ -445,4 +456,16 @@ void Core::DrawLogo()
 	logo.clear();
 }
 
-Core::~Core(){ }
+Core::~Core()
+{
+	if (first) delete first;
+	if (second) delete second;
+	if (rezult) delete rezult;
+
+	if (_stack.size())
+		_stack.clear();
+	CommandQueue.clear();
+	_cmd_default.clear();
+
+}
+

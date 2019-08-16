@@ -22,6 +22,7 @@ protected:
 	Lexer			lexer;
 	
 	std::list <t_cmds>				CommandQueue;
+	std::list <std::tuple<eOperandType, std::string>> CmdQueue;
 	std::list <std::string> 		_cmd_default;
 	std::vector <IOperand const *>	_stack;
 	
@@ -51,7 +52,6 @@ private:
 	IOperand const	*rezult;
 
 	void	DrawLogo();
-	void	FillDefaultCommands();
 	void	RunLiveMode();
 	void	DeleteEmptyData(std::list<std::string> &Data);
 	void	Usage();

@@ -1,0 +1,5 @@
+push int32(10)
+assert int8(10)
+assert int8(10)
+dump
+exit
