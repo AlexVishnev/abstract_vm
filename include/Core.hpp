@@ -22,7 +22,7 @@ protected:
 	Lexer			lexer;
 	
 	std::list <t_cmds>				CommandQueue;
-	std::list <std::tuple<eOperandType, std::string>> CmdQueue;
+	std::list <std::tuple<cmd_type, std::string>> CmdQueue;
 	std::list <std::string> 		_cmd_default;
 	std::vector <IOperand const *>	_stack;
 	

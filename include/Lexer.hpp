@@ -13,7 +13,8 @@ class Lexer
 
 public:
 	void	StartTokenizing(Parser &, std::list <std::string> *, std::list <t_cmds> *, bool);
-	void	CreateNewCommand(std::list <t_cmds> *,bool , std::string &);
+	t_cmds	CreateNewCommand(bool , std::string &);
+
 
 	explicit Lexer();
 	~Lexer();

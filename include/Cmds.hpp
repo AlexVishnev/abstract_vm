@@ -24,9 +24,9 @@ enum cmd_type
 
 typedef struct s_cmds
 {
-	cmd_type type;
-	eOperandType oper_type;
-	std::string strValue;
+	cmd_type		type;
+	eOperandType	oper_type;
+	std::string		strValue;
 
 } t_cmds;
 

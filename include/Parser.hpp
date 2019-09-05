@@ -23,7 +23,7 @@ public:
 
 private:
 	std::string					FilePath;
-	std::list <std::string >	Commands;
+	std::list <std::string>	Commands;
 };
 
 #endif // !PARSER_HPP 

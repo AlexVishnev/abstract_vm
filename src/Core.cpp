@@ -118,7 +118,7 @@ void	Core::_exec()
 					std::cout << "CHAGE THIS MESSAGE" << std::endl;
 			}
 		}
-/*
+
 		for (auto cmd: CmdQueue) {
 			switch (std::get<0>(cmd))
 			{
@@ -141,7 +141,6 @@ void	Core::_exec()
 					std::cout << "CHAGE THIS MESSAGE" << std::endl;
 			}
 		}
-		*/
 	}
 	catch (EmptyStackException &e) {
 		PRINT_ERROR(e.what());

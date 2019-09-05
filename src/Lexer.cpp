@@ -3,12 +3,12 @@
 
 void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, std::list<t_cmds> *CmdQueue, bool istream)
 {
-	std::array<std::regex, 2> reg;
-	std::smatch base_mach;
-	std::smatch piece;
-	bool HasExit = false;
-	reg[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|dump|exit|size|sort)((\\s)+)?(;(.+)?)?";
-	reg[1] = "((\\s)+)?(push|assert)((\\s)+)?"
+	std::array<std::regex, 2> pattern;
+	std::smatch base_mach, piece;
+	bool HasExit = true, HasOneParam = true;
+
+	pattern[0] = "((\\s)+)?(pop|add|sub|mul|div|mod|pow|clear|print|dump|exit|size|sort)((\\s)+)?(;(.+)?)?";
+	pattern[1] = "((\\s)+)?(push|assert)((\\s)+)?"
 			 "(int8|int16|int32|float|double)((\\s)+)?"
 			 "\\(((\\s)+)?"
 			 "(\\+|-)?[\\d]+(\\.[\\d]+)?((\\s)+)?"
@@ -17,15 +17,14 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 
 	this->istream = istream;
 
-	HasExit = CheckForExitCommand(Commands);
-	if (istream)
-		HasExit = true;
+	if (!istream)
+		HasExit = CheckForExitCommand(Commands);
 
 	for (std::string &Command : *Commands)
 	{
-		for (size_t i = 0; i < reg.size(); ++i)
+		for (size_t i = 0; i < pattern.size(); ++i)
 		{
-			if (std::regex_match(Command, piece, std::regex(reg[i]))) {
+			if (std::regex_match(Command, piece, std::regex(pattern[i]))) {
 				for (size_t j = 0; j < piece.size(); ++j)
 				{
 					std::ssub_match sub_match = piece[j];
@@ -33,12 +32,12 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 				}
 				if (!i && !Command.empty()){
 					if (HasExit)
-						CreateNewCommand(CmdQueue, false, Command);
+						CmdQueue->push_back(CreateNewCommand(!HasOneParam, Command));
 					Command.clear();
 				}
 				else if (i && !Command.empty()){
 					if (HasExit)
-						CreateNewCommand(CmdQueue, true, Command);
+						CmdQueue->push_back(CreateNewCommand(HasOneParam, Command));
 					Command.clear();
 				}
 			}
@@ -52,30 +51,32 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 {
 	//type depends on variable position if DefValues[];
-
 	std::string DefValues[] = {
-		"pop", "dump", "print",
-		"add", "sub", "mul",
-		"div", "mod", "pow",
-		"clear", "exit", "push", 
+		"pop", "dump", "print", "add", "sub", "mul",
+		"div", "mod", "pow", "clear", "exit", "push", 
 		"assert", "size", "sort"
 	};
 
-	std::pair<std::string, int> expr;
+	std::list<std::pair<std::string, int>> expr;
 
 	int i = 0;
-	for (std::string var: DefValues) {
-		std::make_pair(var, ++i);
-	}
+	for (std::string var: DefValues)
+		expr.push_back(std::make_pair(var, i++));
 
-
-	for (size_t i = 0; i < sizeof(DefValues) / sizeof(DefValues[0]); i++)
+	for (auto var: expr) 
 	{
-		if (ValueType == DefValues[i] || ValueType.substr(0, 3) == DefValues[i] ||
-			ValueType.substr(0, 4) == DefValues[i] || ValueType.substr(0, 5) == DefValues[i])
-			return static_cast<cmd_type>(i);
+		if (ValueType == var.first || ValueType.substr(0, 3) == var.first ||
+			ValueType.substr(0, 4) == var.first || ValueType.substr(0, 5) == var.first)
+			return static_cast<cmd_type>(var.second);
 	}
 	return static_cast<cmd_type>(15);
+
+	// for (size_t i = 0; i < sizeof(DefValues) / sizeof(DefValues[0]); i++)
+	// {
+	// 	if (ValueType == DefValues[i] || ValueType.substr(0, 3) == DefValues[i] ||
+	// 		ValueType.substr(0, 4) == DefValues[i] || ValueType.substr(0, 5) == DefValues[i])
+	// 		return static_cast<cmd_type>(i);
+	// }
 }
 
 enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
@@ -95,12 +96,13 @@ enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
 	return static_cast<eOperandType>(5);
 }
 
-void Lexer::CreateNewCommand(std::list<t_cmds> *CmdQueue, bool HasTwoParams, std::string &c_type)
+t_cmds Lexer::CreateNewCommand(bool HasTwoParams, std::string &c_type)
 {
-	if (CmdQueue == nullptr || c_type.empty())
-		return ;
-
 	t_cmds cmd;
+	
+	if (c_type.empty())
+		return cmd;
+
 	if (HasTwoParams) {
 		std::string tmp = c_type.find("push") == std::string::npos ? "assert" : "push";
 		cmd.type = TransformValueToCmdtype(tmp);
@@ -108,15 +110,17 @@ void Lexer::CreateNewCommand(std::list<t_cmds> *CmdQueue, bool HasTwoParams, std
 
 		cmd.strValue = c_type.substr(c_type.find('(') + 1, c_type.find(')') - 2);
 		cmd.strValue.pop_back();
-		CmdQueue->push_back(cmd);
+		// CmdQueue->push_back(cmd);
+	
 	}
 	else {
 		cmd.type = TransformValueToCmdtype(c_type);
 		cmd.strValue = "0";
 		cmd.oper_type = End;
-		CmdQueue->push_back(cmd);
+		// CmdQueue->push_back(cmd);
 
 	}
+	return cmd;
 }
 
 void Lexer::AnalyseCommandQueue(std::list <std::string> *CommandsQueue, std::string FilePath)
