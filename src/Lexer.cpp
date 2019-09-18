@@ -30,15 +30,21 @@ void Lexer::StartTokenizing(Parser &parser, std::list<std::string> *Commands, st
 					std::ssub_match sub_match = piece[j];
 					std::string piece = sub_match.str();
 				}
-				if (!i && !Command.empty()){
-					if (HasExit)
-						CmdQueue->push_back(CreateNewCommand(!HasOneParam, Command));
-					Command.clear();
+				try 
+				{
+					if (!i && !Command.empty()){
+						if (HasExit)
+							CmdQueue->push_back(CreateNewCommand(!HasOneParam, Command));
+						Command.clear();
+					}
+					else if (i && !Command.empty()){
+						if (HasExit)
+							CmdQueue->push_back(CreateNewCommand(HasOneParam, Command));
+						Command.clear();
+					}
 				}
-				else if (i && !Command.empty()){
-					if (HasExit)
-						CmdQueue->push_back(CreateNewCommand(HasOneParam, Command));
-					Command.clear();
+				catch (NullPointerException &e) {
+					PRINT_ERROR(e.what());
 				}
 			}
 		}
@@ -69,14 +75,8 @@ enum cmd_type Lexer::TransformValueToCmdtype(std::string &ValueType)
 			ValueType.substr(0, 4) == var.first || ValueType.substr(0, 5) == var.first)
 			return static_cast<cmd_type>(var.second);
 	}
+	expr.clear();
 	return static_cast<cmd_type>(15);
-
-	// for (size_t i = 0; i < sizeof(DefValues) / sizeof(DefValues[0]); i++)
-	// {
-	// 	if (ValueType == DefValues[i] || ValueType.substr(0, 3) == DefValues[i] ||
-	// 		ValueType.substr(0, 4) == DefValues[i] || ValueType.substr(0, 5) == DefValues[i])
-	// 		return static_cast<cmd_type>(i);
-	// }
 }
 
 enum eOperandType Lexer::TransformValueToOtype(std::string &ValueType)
@@ -101,7 +101,7 @@ t_cmds Lexer::CreateNewCommand(bool HasTwoParams, std::string &c_type)
 	t_cmds cmd;
 	
 	if (c_type.empty())
-		return cmd;
+		throw NullPointerException("Error: cat`t create command");
 
 	if (HasTwoParams) {
 		std::string tmp = c_type.find("push") == std::string::npos ? "assert" : "push";
@@ -110,15 +110,12 @@ t_cmds Lexer::CreateNewCommand(bool HasTwoParams, std::string &c_type)
 
 		cmd.strValue = c_type.substr(c_type.find('(') + 1, c_type.find(')') - 2);
 		cmd.strValue.pop_back();
-		// CmdQueue->push_back(cmd);
 	
 	}
 	else {
 		cmd.type = TransformValueToCmdtype(c_type);
 		cmd.strValue = "0";
 		cmd.oper_type = End;
-		// CmdQueue->push_back(cmd);
-
 	}
 	return cmd;
 }
@@ -148,7 +145,7 @@ void Lexer::AnalyseCommandQueue(std::list <std::string> *CommandsQueue, std::str
 
 bool Lexer::CheckForExitCommand(std::list <std::string> *CommandQueue)
 {
-	int exitAmounts = 0; 
+	int16_t exitAmounts = 0; 
 	if (CommandQueue == nullptr)
 		throw NullPointerException("CommandQueue");
 

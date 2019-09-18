@@ -15,7 +15,7 @@ std::string getType(eOperandType type)
 
 }
 
-void Core::_printStackSize()
+void Core::PrintStackSize()
 {
 	try {
 		std::string color = _stack.size() == 0 ? RED : GREEN;
@@ -66,7 +66,7 @@ void	Core::RunLiveMode()
 			std::cerr << e.what() << std::endl;
 		}
 		CommandQueue.erase(CommandQueue.begin(), --CommandQueue.end()); // Need for executetion one last
-		_exec();														// Command given from stdin
+		Exec();															// Command given from stdin
 	}
 	parser.GetCommandsList()->clear();
 	_stack.clear();
@@ -75,7 +75,7 @@ void	Core::RunLiveMode()
 
 void	Core::__initd(const int mode, const char **cmd)
 {
-	parser._read(mode, cmd);
+	parser.Read(mode, cmd);
 
 	if (!parser.isFilestream(mode)) {
 		RunLiveMode();
@@ -87,11 +87,11 @@ void	Core::__initd(const int mode, const char **cmd)
 		catch (LexerException &e) {
 			std::cerr << e.what() << std::endl;
 		}
-		_exec();
+		Exec();
 	}
 }
 
-void	Core::_exec()
+void	Core::Exec()
 {
 	try 
 	{
@@ -99,89 +99,52 @@ void	Core::_exec()
 		{
 			switch (cmd.type)
 			{
-				case Push: _push(cmd); break;
-				case Assert: _assert(cmd); break;
-				case Dump: _dump(); break;
-				case Print: _print(); break;
-				case Clear: _clear(); break;
-				case Pop: _pop(); break;
-				case Add: _add(); break;
-				case Sub: _sub(); break;
-				case Mul: _mul(); break;
-				case Div: _div(); break;
-				case Mod: _mod(); break;
-				case Pow: _pow(); break;
-				case Exit: _exit();
-				case Size: _printStackSize(); break;
-				case Sort: _sortStack(); break;
-				default:
-					std::cout << "CHAGE THIS MESSAGE" << std::endl;
-			}
-		}
-
-		for (auto cmd: CmdQueue) {
-			switch (std::get<0>(cmd))
-			{
-				// case Push: _push(cmd); break;
-				// case Assert: _assert(cmd); break;
-				case Dump: _dump(); break;
-				case Print: _print(); break;
-				case Clear: _clear(); break;
-				case Pop: _pop(); break;
-				case Add: _add(); break;
-				case Sub: _sub(); break;
-				case Mul: _mul(); break;
-				case Div: _div(); break;
-				case Mod: _mod(); break;
-				case Pow: _pow(); break;
-				case Exit: _exit();
-				case Size: _printStackSize(); break;
-				case Sort: _sortStack(); break;
+				case Push: PushValue(cmd); break;
+				case Assert: AssertValue(cmd); break;
+				case Dump: _Dump(); break;
+				case Print: _Print(); break;
+				case Clear: _Clear(); break;
+				case Pop: _Pop(); break;
+				case Add: _Add(); break;
+				case Sub: _Sub(); break;
+				case Mul: _Mul(); break;
+				case Div: _Div(); break;
+				case Mod: _Mod(); break;
+				case Pow: _Pow(); break;
+				case Exit: _Exit();
+				case Size: PrintStackSize(); break;
+				case Sort: SortStack(); break;
 				default:
 					std::cout << "CHAGE THIS MESSAGE" << std::endl;
 			}
 		}
 	}
-	catch (EmptyStackException &e) {
-		PRINT_ERROR(e.what());
-	}
-	catch (OverflowException &e) {
-		PRINT_ERROR(e.what());
-	}
-	catch (UnderflowException &e) {
-		PRINT_ERROR(e.what());
-	}
-	catch (DivByZeroException &e) {
-		PRINT_ERROR(e.what());
-	}
-	catch (LexerException &e) {
-		PRINT_ERROR(e.what());
-	}
-	catch (NullPointerException &e) {
-		PRINT_ERROR(e.what());
-	}
-	catch (BadLimitException &e) {
-		PRINT_ERROR(e.what());
-	}
-	catch (std::exception &e) {
-		PRINT_ERROR(e.what());
-	}
+	catch (EmptyStackException &e)  { PRINT_ERROR(e.what()); }
+	catch (OverflowException &e)    { PRINT_ERROR(e.what()); }
+	catch (UnderflowException &e)   { PRINT_ERROR(e.what()); }
+	catch (DivByZeroException &e)   { PRINT_ERROR(e.what()); }
+	catch (LexerException &e)       { PRINT_ERROR(e.what()); }
+	catch (NullPointerException &e) { PRINT_ERROR(e.what()); }
+	catch (BadLimitException &e)    { PRINT_ERROR(e.what()); }
+	catch (std::exception &e)       { PRINT_ERROR(e.what()); }
 	CommandQueue.clear();
-	
 }
 
-void	Core::_exit()
+void	Core::_Exit()
 { 
 	if (_stack.size() != 0)
 		_stack.clear();
 	exit(0);
 }
 
-void	Core::_clear() { _stack.clear();}
-
-void	Core::_pow()
+void	Core::_Clear()
 {
-	_get_elements_from_stack();
+	_stack.clear();
+}
+
+void	Core::_Pow()
+{
+	GetElementsFromStack();
 	if (first != nullptr && second != nullptr) {
 		rezult = *first ^ *second;
 	
@@ -196,7 +159,7 @@ void	Core::_pow()
 	}
 }
 
-void	Core::_sortStack()
+void	Core::SortStack()
 {
 	if (_stack.empty()) {
 		PRINT_WARNING("Stack is empty");
@@ -218,9 +181,9 @@ void	Core::_sortStack()
 	_stack.shrink_to_fit();
 }
 
-void	Core::_mod()
+void	Core::_Mod()
 {
-	_get_elements_from_stack();
+	GetElementsFromStack();
 	
 	if (first != nullptr && second != nullptr) {
 
@@ -237,9 +200,9 @@ void	Core::_mod()
 	}
 }
 
-void	Core::_add()
+void	Core::_Add()
 {
-	_get_elements_from_stack();
+	GetElementsFromStack();
 	
 	if (first != nullptr && second != nullptr) {
 
@@ -258,9 +221,9 @@ void	Core::_add()
 }
 
 
-void	Core::_mul()
+void	Core::_Mul()
 {
-	_get_elements_from_stack();
+	GetElementsFromStack();
 
 	if (first != nullptr && second != nullptr) {
 
@@ -278,7 +241,7 @@ void	Core::_mul()
 	}
 }
 
-void	Core::_assert(t_cmds cmd)
+void	Core::AssertValue(t_cmds cmd)
 {
 	if (_stack.empty())
 		throw EmptyStackException(RED"Runtime error:\033[0m Trying to ASSERT on empty stack");
@@ -307,9 +270,9 @@ void	Core::_assert(t_cmds cmd)
 }
 
 
-void	Core::_div()
+void	Core::_Div()
 {
-	_get_elements_from_stack();
+	GetElementsFromStack();
 
 	if (first != nullptr && second != nullptr) {
 
@@ -326,7 +289,7 @@ void	Core::_div()
 	}
 }
 
-void	Core::_print()
+void	Core::_Print()
 {
 	if (_stack.empty())
 		throw EmptyStackException(RED"Print Error:\033[0m There is nothing to print\n");
@@ -335,12 +298,12 @@ void	Core::_print()
 	if (v1->getType() != Int8)
 		throw EmptyStackException(RED"Print Error:\033[0m trying to print non char variable");
 
-	std::cout << YELLOW "AVM (#_print):" NO_COLOR << static_cast<char>(std::stoi(v1->toString())) << std::endl;
+	std::cout << YELLOW "AVM (#Print):" NO_COLOR << static_cast<char>(std::stoi(v1->toString())) << std::endl;
 }
 
-void	Core::_sub()
+void	Core::_Sub()
 {
-	_get_elements_from_stack();
+	GetElementsFromStack();
 	
 	if (first != nullptr && second != nullptr) {
 
@@ -358,7 +321,7 @@ void	Core::_sub()
 		delete second;
 	}
 }
-void	Core::_pop()
+void	Core::_Pop()
 {
 	if (_stack.empty())
 		throw EmptyStackException(YELLOW"Warning:\033[0m Trying to POP with empty stack");
@@ -366,18 +329,16 @@ void	Core::_pop()
 		_stack.pop_back();
 }
 
-void	Core::_push(t_cmds	cmd)
+void	Core::PushValue(t_cmds	cmd)
 {
-	auto lol = std::make_tuple(cmd.oper_type, cmd.strValue);
-	
-	const IOperand *Operand = Factory().createOperand(std::get<0>(lol), std::get<1>(lol));
+	const IOperand *Operand = Factory().createOperand(cmd.oper_type, cmd.strValue);
 	if (Operand == nullptr)
 		throw BadLimitException(cmd.strValue, getType(cmd.oper_type));
 	_stack.push_back(Operand);
 }
 
 
-void Core::_dump()
+void Core::_Dump()
 {
 	if (_stack.empty())
 		throw EmptyStackException(YELLOW"Warning:\033[0m there is nothing to dump\n");
@@ -389,7 +350,7 @@ void Core::_dump()
 	{
 		--i;
 		if (*i != nullptr && !(*i)->toString().empty())
-			std::cout << YELLOW "AVM (#_dump): " NO_COLOR RED "stack[" << --counter 
+			std::cout << YELLOW "AVM (#Dump): " NO_COLOR RED "stack[" << --counter 
 			<< "] " NO_COLOR << (*i)->toString() << std::endl;
 
 	}
@@ -409,7 +370,7 @@ Core &Core::operator=(Core const &ref)
 	return (*this);
 }
 
-void Core::_get_elements_from_stack()
+void Core::GetElementsFromStack()
 {
 	if (_stack.empty())
 		throw EmptyStackException(RED"Runtime error:\033[0m empty stack\n");

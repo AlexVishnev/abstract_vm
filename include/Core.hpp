@@ -7,8 +7,6 @@
 #include "Lexer.hpp"
 
 
-
-
 class Core
 {
 public:
@@ -22,46 +20,40 @@ protected:
 	Lexer			lexer;
 	
 	std::list <t_cmds>				CommandQueue;
-	std::list <std::tuple<cmd_type, std::string>> CmdQueue;
 	std::list <std::string> 		_cmd_default;
 	std::vector <IOperand const *>	_stack;
 	
-	void	_push(t_cmds comadnds);
-	void	_assert(t_cmds comadnds);
-	void	_get_elements_from_stack();
-	void	_pop();
-	void	_add();
-	void	_sub();
-	void	_div();
-	void	_mul();
-	void	_mod();
-	void	_dump();
-	void	_pow();
-	void	_print();
-	void	_clear();
-	void	_exit();
-	void	_printStackSize();
-	void	_sortStack();
-	void	_equal();
+	void	PushValue(t_cmds comadnds);
+	void	AssertValue(t_cmds comadnds);
+	void	GetElementsFromStack();
+	void	_Pop();
+	void	_Add();
+	void	_Sub();
+	void	_Div();
+	void	_Mul();
+	void	_Mod();
+	void	_Dump();
+	void	_Pow();
+	void	_Print();
+	void	_Clear();
+	void	_Exit();
+	void	PrintStackSize();
+	void	SortStack();
+	void	Equal();
 
 private:
-	
-	void	_exec();
 	IOperand const	*first;
 	IOperand const	*second;
 	IOperand const	*rezult;
 
+	void	Exec();
 	void	DrawLogo();
 	void	RunLiveMode();
 	void	DeleteEmptyData(std::list<std::string> &Data);
 	void	Usage();
+
 	Core(Core const &ref);
 	Core &operator=(const Core &ref);
-
 };
-
-
-
-
 
 #endif

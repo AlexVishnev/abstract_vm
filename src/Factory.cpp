@@ -1,5 +1,14 @@
 #include "Factory.hpp"
 
+Factory::Factory()
+{
+	CoreQueue.push_back(&Factory::createInt8);
+	CoreQueue.push_back(&Factory::createInt16);
+	CoreQueue.push_back(&Factory::createInt32);
+	CoreQueue.push_back(&Factory::createFloat);
+	CoreQueue.push_back(&Factory::createDouble);
+}
+
 IOperand const *Factory::createOperand(eOperandType type, std::string const &value) const
 {
 	return ((*this.*CoreQueue.at(type))(value));
@@ -92,16 +101,7 @@ Factory &Factory::operator=(Factory const &ref)
 	return *this;
 }
 
-Factory::Factory()
-{
-	CoreQueue.push_back(&Factory::createInt8);
-	CoreQueue.push_back(&Factory::createInt16);
-	CoreQueue.push_back(&Factory::createInt32);
-	CoreQueue.push_back(&Factory::createFloat);
-	CoreQueue.push_back(&Factory::createDouble);
-}
 Factory::~Factory()
 {
-	std::cout << "By BY from factory" << std::endl;
 	CoreQueue.clear();
 }

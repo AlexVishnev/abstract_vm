@@ -18,10 +18,11 @@ template <class T>Operand<T>::Operand(T value): _value(value)
 	}
 }
 
-//TODO WRITE CATHCERS
 template <class T> void Operand<T>::operations_check(T first, T second, char _operator) const
 {
-	if (_operator == '+') {
+	switch (_operator)
+	{
+	case '+':
 		if (first > 0 && second > 0) {
 			if ((first + second) < second)
 				throw UnderflowException("Calculation error: ", "+"); 
@@ -32,19 +33,8 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 			else if ((first + second) < second)
 				throw UnderflowException("Calculation error: ", "+");
 		}
-	}
-	else if (_operator == '*')
-	{
-		if (std::abs(first) > std::numeric_limits<T>::max() / std::abs(second)) {
-			if ((first > 0 && second > 0) || (first < 0 && second < 0))
-				throw OverflowException("Calculation error: ", "*");
-			else
-				throw UnderflowException("Calculation error: ", "*");
-			
-		}
-	}
-	else if (_operator == '-') {
-
+		break;
+	case '-':
 		if (first > 0 && second < 0){
 			if ((std::numeric_limits<T>::max() / 2 < std::abs(first)) 
 				&& (std::numeric_limits<T>::max() / 2 < std::abs(first)))
@@ -55,18 +45,29 @@ template <class T> void Operand<T>::operations_check(T first, T second, char _op
 				&& (std::numeric_limits<T>::max() / 2 < std::abs(first)))
 				throw UnderflowException("Calculation error: ", "-");
 		}
-	}
-	else if (_operator == '/') {
+		break;
+	case '*':
+		if (std::abs(first) > std::numeric_limits<T>::max() / std::abs(second)) {
+			if ((first > 0 && second > 0) || (first < 0 && second < 0))
+				throw OverflowException("Calculation error: ", "*");
+			else
+				throw UnderflowException("Calculation error: ", "*");
+		}
+		break;
+	case '/':
 		if (second == 0)
 			throw DivByZeroException(RED"Calculation error: \033[0m division by zero");
-	}
-	else if (_operator == '%') {
+		break;
+	case '%':
 		if (second == 0)
 			throw DivByZeroException (RED"Calculation error: \033[0m modulo by zero");
-	}
-	else if (_operator == '^') {
+		break;
+	case '^':
 		if (second > 32)
 			throw OverflowException("Calculation error: ", "pow");
+		break;
+	default:
+		break;
 	}
 }
 
@@ -82,7 +83,6 @@ template <class T> int Operand<T>::getPrecision() const
 		return (14);
 	else
 		return (0);
-	
 }
 
 template <class T> eOperandType Operand<T>::getType() const
@@ -108,7 +108,6 @@ template <class T> IOperand const &Operand<T>::operator = (Operand const &ref)
 		_value = ref._value;
 	}
 	return (*this);
-
 }
 
 template <class T> IOperand const *Operand<T>::operator + (IOperand const &ref) const
@@ -116,16 +115,12 @@ template <class T> IOperand const *Operand<T>::operator + (IOperand const &ref) 
 	eOperandType	type;
 	std::string		rezult_operation;
 
-
 	type = this->getType() >= ref.getType() ? this->getType() : ref.getType();
-
 	operations_check(_value, static_cast<T>(std::stod(ref.toString())), '+');
 
 	rezult_operation = type < Float ? std::to_string(static_cast<int64_t>(this->_value) + std::stoll(ref.toString())) : 
 									  std::to_string(static_cast<long double>(this->_value) + std::stold(ref.toString()));
-
 	return (Factory().createOperand(type, rezult_operation));
-
 }
 
 template <class T> IOperand const *Operand<T>::operator - (IOperand const &ref) const
@@ -133,16 +128,12 @@ template <class T> IOperand const *Operand<T>::operator - (IOperand const &ref) 
 	eOperandType	type;
 	std::string 	rezult_operation;
 
-
 	type = this->getType() >= ref.getType() ? this->getType() : ref.getType();
-
 	operations_check(_value, static_cast<T>(std::stod(ref.toString())), '-');
 
 	rezult_operation = type < Float ? std::to_string(static_cast<int64_t>(this->_value) - std::stoll(ref.toString())) : 
 									  std::to_string(static_cast<long double>(this->_value) - std::stold(ref.toString()));
-
 	return (Factory().createOperand(type, rezult_operation));
-
 }
 
 template <class T> IOperand const *Operand<T>::operator * (IOperand const &ref) const
@@ -150,16 +141,12 @@ template <class T> IOperand const *Operand<T>::operator * (IOperand const &ref) 
 	eOperandType	type;
 	std::string 	rezult_operation;
 
-
 	type = this->getType() >= ref.getType() ? this->getType() : ref.getType();
-
 	operations_check(_value, static_cast<T>(std::stod(ref.toString())), '*');
 
 	rezult_operation = type < Float ? std::to_string(static_cast<int64_t>(this->_value) * std::stoll(ref.toString())) : 
 									  std::to_string(static_cast<long double>(this->_value) * std::stold(ref.toString()));
-
 	return (Factory().createOperand(type, rezult_operation));
-
 }
 
 template <class T> IOperand const *Operand<T>::operator / (IOperand const &ref) const
@@ -167,15 +154,12 @@ template <class T> IOperand const *Operand<T>::operator / (IOperand const &ref) 
 	eOperandType	type;
 	std::string 	rezult_operation;
 
-
 	type = this->getType() >= ref.getType() ? this->getType() : ref.getType();
-
 	operations_check(_value, static_cast<T>(std::stod(ref.toString())), '/');
 
 	rezult_operation = type < Float ? std::to_string(static_cast<int64_t>(this->_value) / std::stoll(ref.toString())) : 
 									  std::to_string(static_cast<long double>(this->_value) / std::stold(ref.toString()));
 	return (Factory().createOperand(type, rezult_operation));
-
 }
 
 template <class T> IOperand const *Operand<T>::operator % (IOperand const &ref) const
@@ -183,15 +167,11 @@ template <class T> IOperand const *Operand<T>::operator % (IOperand const &ref) 
 	eOperandType	type;
 	std::string 	rezult_operation;
 
-
 	type = this->getType() >= ref.getType() ? this->getType() : ref.getType();
-
 	operations_check(_value, static_cast<T>(std::stod(ref.toString())), '%');
 	rezult_operation = type < Float ? std::to_string(static_cast<int64_t>(this->_value) % std::stoll(ref.toString())) : 
 									  std::to_string(fmod(static_cast<long double>(this->_value), std::stold(ref.toString())));
-
 	return (Factory().createOperand(type, rezult_operation));
-
 }
 
 
@@ -200,16 +180,13 @@ template <class T> IOperand const *Operand<T>::operator ^ (IOperand const &ref) 
 	eOperandType	type;
 	std::string 	rezult_operation;
 
-
 	type = this->getType() >= ref.getType() ? this->getType() : ref.getType();
 	operations_check(_value, static_cast<T>(std::stod(ref.toString())), '^');
 	if (type < Float)
 		rezult_operation = std::to_string(pow(static_cast<int64_t>(this->_value), std::stoll(ref.toString())));
 	else
 		rezult_operation = std::to_string(pow(static_cast<long double>(this->_value), std::stold(ref.toString())));
-
 	return (Factory().createOperand(type, rezult_operation));
-
 }
 
 
@@ -220,7 +197,6 @@ template <class T> Operand<T>::Operand(Operand const &ref)
 
 template <class T> Operand<T>::Operand(){ /*-_-*/}
 template <class T> Operand<T>::~Operand(){/*-_-*/}
-
 
 template class Operand<int8_t>;
 template class Operand<int16_t>;

@@ -16,8 +16,8 @@ template <typename T>
 class Operand: public IOperand
 {
 protected:
-	T				_value;
-	std::string		_buffer;
+	T			_value;
+	std::string	_buffer;
 public:
 	Operand(T value);
 	~Operand();

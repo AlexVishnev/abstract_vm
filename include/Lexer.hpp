@@ -10,21 +10,21 @@
 
 class Lexer
 {
-
 public:
-	void	StartTokenizing(Parser &, std::list <std::string> *, std::list <t_cmds> *, bool);
-	t_cmds	CreateNewCommand(bool , std::string &);
-
+	void StartTokenizing(Parser &, std::list <std::string> *, std::list <t_cmds> *, bool);
+	t_cmds CreateNewCommand(bool , std::string &);
 
 	explicit Lexer();
 	~Lexer();
 
 private:
-	enum cmd_type		TransformValueToCmdtype(std::string &);
-	enum eOperandType	TransformValueToOtype(std::string &);
-	void				AnalyseCommandQueue(std::list <std::string> *, std::string);
-	bool				CheckForExitCommand(std::list <std::string> *);
-	bool 				istream;
+	bool istream;
+
+	enum cmd_type TransformValueToCmdtype(std::string &);
+	enum eOperandType TransformValueToOtype(std::string &);
+	void AnalyseCommandQueue(std::list <std::string> *, std::string);
+	bool CheckForExitCommand(std::list <std::string> *);
+
 };
 
 
