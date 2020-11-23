@@ -20,14 +20,8 @@ private:
 	IOperand const *createInt32 (std::string const & value ) const;
 	IOperand const *createFloat (std::string const & value ) const;
 	IOperand const *createDouble(std::string const & value ) const;
-
-
+	
 	std::vector <IOperand const *(Factory::*)(std::string const &value) const> CoreQueue;
-
 };
-
-
-
-
 
 #endif
